@@ -1,5 +1,7 @@
-package codesquad;
+package codesquad.webserver;
 
+import codesquad.http.HttpRequest;
+import codesquad.http.HttpRequestParser;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

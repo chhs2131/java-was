@@ -1,4 +1,4 @@
-package codesquad;
+package codesquad.webserver;
 
 import java.util.concurrent.ExecutorService;
 

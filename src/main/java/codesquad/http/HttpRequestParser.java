@@ -1,4 +1,4 @@
-package codesquad;
+package codesquad.http;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -44,7 +44,6 @@ public class HttpRequestParser {
 
     private static String parseBody(String[] lines, int contentLength) {
         StringBuilder body = new StringBuilder();
-        boolean isBody = false;
 
         int bodyStartIndex = 0;
         for (int i = 1; i < lines.length; i++) {

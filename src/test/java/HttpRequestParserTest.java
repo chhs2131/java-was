@@ -1,5 +1,5 @@
-import codesquad.HttpRequest;
-import codesquad.HttpRequestParser;
+import codesquad.http.HttpRequest;
+import codesquad.http.HttpRequestParser;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
