@@ -1,6 +1,10 @@
 package codesquad.webserver;
 
 import codesquad.http.HttpRequest;
+import codesquad.http.HttpResponse;
+import codesquad.http.ResponseConverter;
+import codesquad.socket.HttpInputStream;
+import codesquad.socket.HttpOutputStream;
 
 import java.io.IOException;
 import java.net.Socket;
@@ -15,8 +19,17 @@ public record HttpTask(Socket clientSocket, RequestHandler requestHandler, Respo
     @Override
     public void run() {
         try {
-            HttpRequest request = requestHandler.handle(clientSocket);
-            responseHandler.handle(clientSocket, request);
+            HttpInputStream inputStream = new HttpInputStream(clientSocket);
+            HttpOutputStream outputStream = new HttpOutputStream(clientSocket);
+
+            String message = inputStream.read();
+
+            HttpRequest request = requestHandler.handle(message);
+            HttpResponse response = responseHandler.handle(request);
+
+            byte[] socketBytes = ResponseConverter.toSocketBytes(response);
+            outputStream.write(socketBytes);
+
             clientSocket.close();
         } catch (IOException e) {
             e.printStackTrace();
