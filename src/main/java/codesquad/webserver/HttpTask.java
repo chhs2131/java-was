@@ -1,5 +1,7 @@
 package codesquad.webserver;
 
+import codesquad.http.HttpRequest;
+
 import java.io.IOException;
 import java.net.Socket;
 
@@ -13,8 +15,8 @@ public record HttpTask(Socket clientSocket, RequestHandler requestHandler, Respo
     @Override
     public void run() {
         try {
-            requestHandler.handle(clientSocket);
-            responseHandler.handle(clientSocket);
+            HttpRequest request = requestHandler.handle(clientSocket);
+            responseHandler.handle(clientSocket, request);
             clientSocket.close();
         } catch (IOException e) {
             e.printStackTrace();

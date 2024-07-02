@@ -15,7 +15,7 @@ import java.net.Socket;
 public class RequestHandler {
     private static final Logger logger = LoggerFactory.getLogger(RequestHandler.class);
 
-    public void handle(Socket clientSocket) {
+    public HttpRequest handle(Socket clientSocket) {
         // 사용자 입력을 받는 부분
         String message = getInputStream(clientSocket);
 
@@ -24,6 +24,8 @@ public class RequestHandler {
         logger.debug("HTTP Request! {} {} {}", request.method(), request.path(), request.protocol());
         logger.debug("HTTP Headers! size: {}", request.headers().size());
         logger.debug("HTTP Body! {}", request.body());
+
+        return request;
     }
 
     private String getInputStream(Socket clientSocket) {

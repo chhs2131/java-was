@@ -1,5 +1,7 @@
 package codesquad.webserver;
 
+import codesquad.http.ContentType;
+import codesquad.http.HttpRequest;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -16,36 +18,52 @@ public class ResponseHandler {
     private static final Logger logger = LoggerFactory.getLogger(ResponseHandler.class);
     private static final String STATIC_FILE_PATH = "src/main/resources/static";
 
-    public void handle(Socket clientSocket) {
-        outputStream(clientSocket);
+    public void handle(Socket clientSocket, HttpRequest httpRequest) {
+        // TODO 정적파일만 고려해서 반환중!
+        String resourcePath = httpRequest.path();
+        outputStream(clientSocket, resourcePath);
     }
 
-    private void outputStream(Socket clientSocket) {
+    private void outputStream(Socket clientSocket, String staticFilePath) {
         try {
             OutputStream clientOutput = clientSocket.getOutputStream();
 
+            String mimeType = getContentType(staticFilePath);
+
             clientOutput.write("HTTP/1.1 200 OK\r\n".getBytes());
-            clientOutput.write("Content-Type: text/html\r\n".getBytes());
+            clientOutput.write(("Content-Type: " + mimeType + "\r\n").getBytes());
             clientOutput.write("\r\n".getBytes());
 
-            byte[] fileData = getStaticFile("/index.html");
+            byte[] fileData = getStaticFile(staticFilePath);
             clientOutput.write(fileData);
             clientOutput.flush();
+
+            logger.debug("정상 응답 완료");
         } catch (IOException e) {
             e.printStackTrace();
             throw new IllegalArgumentException("응답 반환중 문제가 발생했어요. ^_^");
         }
     }
 
-    private byte[] getStaticFile(String path) throws IOException {
-        File file = new File("src/main/resources/static/index.html");
-        if (!file.exists()) {
-            logger.error("????????");
-            // TODO
+    private String getContentType(String staticFilePath) {
+        String[] split = staticFilePath.split("\\.");
+        if (split.length == 0) {
+            return "";
         }
 
-        FileInputStream fileInputStream = new FileInputStream(STATIC_FILE_PATH + path);
-        byte[] fileData = fileInputStream.readAllBytes();
-        return fileData;
+        String extension = split[split.length - 1];
+        return ContentType.from(extension).getMimeType();
+    }
+
+    private byte[] getStaticFile(String path) throws IOException {
+        String filePath = STATIC_FILE_PATH + path;
+
+        File file = new File(filePath);
+        if (!file.exists()) {
+            throw new IllegalArgumentException("파일이 존재하지 않습니다. path: " + filePath);
+        }
+
+        FileInputStream fileInputStream = new FileInputStream(filePath);
+        return fileInputStream.readAllBytes();
     }
 }
