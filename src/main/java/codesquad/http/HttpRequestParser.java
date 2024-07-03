@@ -21,7 +21,7 @@ public class HttpRequestParser {
         if (pathAndQueryString.length > 1) {
             query = parseQueryString(pathAndQueryString[1]);
         }
-        HttpProtocol protocol = HttpProtocol.from(startLine[2]);
+        HttpProtocol protocol = HttpProtocol.from(startLine[2].trim());
 
         // Headers
         Map<String, String> headers = parseHeaders(lines);
