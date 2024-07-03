@@ -1,5 +1,8 @@
 package codesquad.http;
 
+import codesquad.http.type.HttpMethod;
+import codesquad.http.type.HttpProtocol;
+
 import java.util.HashMap;
 import java.util.Map;
 
@@ -11,14 +14,14 @@ public class HttpRequestParser {
 
         // Start-Line
         String[] startLine = lines[0].split(" ");
-        String method = startLine[0];
+        HttpMethod method = HttpMethod.from(startLine[0]);
         String[] pathAndQueryString = startLine[1].split("\\?");
         String path = pathAndQueryString[0];
         Map<String, String> query = new HashMap<>();
         if (pathAndQueryString.length > 1) {
             query = parseQueryString(pathAndQueryString[1]);
         }
-        String protocol = startLine[2];
+        HttpProtocol protocol = HttpProtocol.from(startLine[2]);
 
         // Headers
         Map<String, String> headers = parseHeaders(lines);

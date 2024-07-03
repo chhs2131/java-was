@@ -1,5 +1,7 @@
 import codesquad.http.HttpRequest;
 import codesquad.http.HttpRequestParser;
+import codesquad.http.type.HttpMethod;
+import codesquad.http.type.HttpProtocol;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
@@ -10,16 +12,13 @@ class HttpRequestParserTest {
     @Test
     @DisplayName("Body까지 모두 존재하는 경우")
     public void test_correctly_parses_well_formed_http_post_request_with_body() {
-        // Given
         String message = "POST /submit HTTP/1.1\nHost: www.example.com\nContent-Length: 11\n\nHello World";
 
-        // When
         HttpRequest request = HttpRequestParser.parse(message);
 
-        // Then
-        assertEquals("POST", request.method());
+        assertEquals(HttpMethod.POST, request.method());
         assertEquals("/submit", request.path());
-        assertEquals("HTTP/1.1", request.protocol());
+        assertEquals(HttpProtocol.HTTP_1_1, request.protocol());
         assertEquals("www.example.com", request.headers().get("Host"));
         assertEquals("11", request.headers().get("Content-Length"));
         assertEquals("Hello World", request.body());
@@ -28,16 +27,13 @@ class HttpRequestParserTest {
     @Test
     @DisplayName("QueryString이 존재하는 경우")
     public void test_handles_http_requests_with_malformed_headers_with_query_string() {
-        // Given
         String message = "GET /index.html?param1=value1&param2=value2 HTTP/1.1\nHost www.example.com\n\n";
 
-        // When
         HttpRequest request = HttpRequestParser.parse(message);
 
-        // Then
-        assertEquals("GET", request.method());
+        assertEquals(HttpMethod.GET, request.method());
         assertEquals("/index.html", request.path());
-        assertEquals("HTTP/1.1", request.protocol());
+        assertEquals(HttpProtocol.HTTP_1_1, request.protocol());
         assertTrue(request.headers().isEmpty());
         assertTrue(request.body().isEmpty());
         assertTrue(request.queryString().containsKey("param1"));
@@ -49,16 +45,13 @@ class HttpRequestParserTest {
     @Test
     @DisplayName("Header와 Body가 없는 경우")
     public void test_handles_http_requests_with_no_headers() {
-        // Given
         String message = "GET /index.html HTTP/1.1\n\n";
 
-        // When
         HttpRequest request = HttpRequestParser.parse(message);
 
-        // Then
-        assertEquals("GET", request.method());
+        assertEquals(HttpMethod.GET, request.method());
         assertEquals("/index.html", request.path());
-        assertEquals("HTTP/1.1", request.protocol());
+        assertEquals(HttpProtocol.HTTP_1_1, request.protocol());
         assertTrue(request.headers().isEmpty());
         assertTrue(request.body().isEmpty());
     }
@@ -66,16 +59,13 @@ class HttpRequestParserTest {
     @Test
     @DisplayName("Body가 없는 경우")
     public void test_handles_http_requests_with_no_body() {
-        // Given
         String message = "GET /index.html HTTP/1.1\nHost: www.example.com\n\n";
 
-        // When
         HttpRequest request = HttpRequestParser.parse(message);
 
-        // Then
-        assertEquals("GET", request.method());
+        assertEquals(HttpMethod.GET, request.method());
         assertEquals("/index.html", request.path());
-        assertEquals("HTTP/1.1", request.protocol());
+        assertEquals(HttpProtocol.HTTP_1_1, request.protocol());
         assertEquals("www.example.com", request.headers().get("Host"));
         assertTrue(request.body().isEmpty());
     }

@@ -1,8 +1,10 @@
 package codesquad.webserver;
 
-import codesquad.http.ContentType;
+import codesquad.http.type.ContentType;
 import codesquad.http.HttpRequest;
 import codesquad.http.HttpResponse;
+import codesquad.http.type.HttpProtocol;
+import codesquad.http.type.HttpStatus;
 import codesquad.util.StringUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -19,7 +21,6 @@ public class ResponseHandler {
     private static final String STATIC_FILE_PATH = "src/main/resources/static";
 
     public HttpResponse handle(HttpRequest httpRequest) {
-        // TODO 정적파일만 고려해서 반환중!
         String resourcePath = httpRequest.path();
 
         if (isStaticRequest(resourcePath)) {
@@ -28,10 +29,10 @@ public class ResponseHandler {
 
             Map<String, String> headers = new HashMap<>();
             headers.put("Content-Type", mimeType);
-            return new HttpResponse("HTTP/1.1", "200 OK", headers, fileData);
+            return new HttpResponse(HttpProtocol.HTTP_1_1, HttpStatus.OK, headers, fileData);
         }
 
-        return new HttpResponse("HTTP/1.1", "404 Not Found", null, "NULL 발생");
+        return new HttpResponse(HttpProtocol.HTTP_1_1, HttpStatus.NOT_FOUND, null, "없음없음!!! 발생");
     }
 
     private boolean isStaticRequest(String resourcePath) {

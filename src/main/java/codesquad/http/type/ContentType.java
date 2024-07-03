@@ -1,4 +1,4 @@
-package codesquad.http;
+package codesquad.http.type;
 
 import java.util.Arrays;
 

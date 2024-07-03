@@ -5,6 +5,8 @@ import codesquad.http.HttpResponse;
 import codesquad.http.ResponseConverter;
 import codesquad.socket.HttpInputStream;
 import codesquad.socket.HttpOutputStream;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 import java.net.Socket;
@@ -16,6 +18,8 @@ import java.net.Socket;
  * @param responseHandler 적절한 HTTP Response를 생성하고 반환하는 객체
  */
 public record HttpTask(Socket clientSocket, RequestHandler requestHandler, ResponseHandler responseHandler) implements Runnable {
+    private static final Logger logger = LoggerFactory.getLogger(HttpTask.class);
+
     @Override
     public void run() {
         try {
@@ -32,8 +36,9 @@ public record HttpTask(Socket clientSocket, RequestHandler requestHandler, Respo
 
             clientSocket.close();
         } catch (IOException e) {
+            logger.error("요청 처리를 실패했습니다. {}", e.getMessage());
             e.printStackTrace();
-            throw new IllegalArgumentException("잘못된 HTTP 요청입니다.");
+
         }
     }
 }
