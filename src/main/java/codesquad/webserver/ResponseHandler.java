@@ -5,6 +5,7 @@ import codesquad.http.HttpRequest;
 import codesquad.http.HttpResponse;
 import codesquad.http.type.HttpProtocol;
 import codesquad.http.type.HttpStatus;
+import codesquad.model.User;
 import codesquad.util.StringUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -21,22 +22,49 @@ public class ResponseHandler {
     private static final String STATIC_FILE_PATH = "src/main/resources/static";
 
     public HttpResponse handle(HttpRequest httpRequest) {
-        String resourcePath = httpRequest.path();
+        String path = httpRequest.path();
 
-        if (isStaticRequest(resourcePath)) {
-            String mimeType = getContentType(resourcePath);
-            String fileData = getStaticFile(resourcePath);
+        if (path.equals("/create")) {
+            String name = httpRequest.queryString().get("name");
+            String password = httpRequest.queryString().get("password");
+            String nickname = httpRequest.queryString().get("nickname");
 
-            Map<String, String> headers = new HashMap<>();
-            headers.put("Content-Type", mimeType);
-            try {
-                return new HttpResponse(HttpProtocol.HTTP_1_1, HttpStatus.OK, headers, fileData);
-            } catch (Exception e) {
-                return new HttpResponse(HttpProtocol.HTTP_1_1, HttpStatus.NOT_FOUND, null, "못찾겠습니다~");
-            }
+            final User user = new User(name, password, nickname);
+            logger.debug("회원가입을 완료했습니다. {}", user);
+
+            return new HttpResponse(HttpProtocol.HTTP_1_1, HttpStatus.CREATED, null, "유저가 생성되었습니다.");
         }
 
-        return new HttpResponse(HttpProtocol.HTTP_1_1, HttpStatus.BAD_REQUEST, null, "요청이 잘못된 것 같은데요?");
+        // TODO 정적 파일에 대한 요청인지 판단을 어떻게 할 것인가요??
+        String mimeType = "";
+        String fileData = "";
+        String resourcePath = "";
+        Map<String, String> headers = new HashMap<>();
+
+        if (path.equals("/registration")) {
+            mimeType = ContentType.HTML.getMimeType();
+            headers.put("Content-Type", mimeType);
+            resourcePath = "/registration/index.html";
+        }
+        else if (isStaticRequest(path)) {
+            mimeType = getContentType(path);
+            headers.put("Content-Type", mimeType);
+            resourcePath = path;
+        }
+
+        // 정적 파일이 아닌 경우
+        if (resourcePath.isEmpty()) {
+            return new HttpResponse(HttpProtocol.HTTP_1_1, HttpStatus.BAD_REQUEST, null, "요청이 잘못된 것 같은데요?");
+        }
+
+        // 정적 파일 응답
+        try {
+            fileData = getStaticFile(resourcePath);
+            return new HttpResponse(HttpProtocol.HTTP_1_1, HttpStatus.OK, headers, fileData);
+        } catch (Exception e) {
+            logger.debug("HTTP NotFound Exception. {}", resourcePath);
+            return new HttpResponse(HttpProtocol.HTTP_1_1, HttpStatus.NOT_FOUND, null, "못찾겠습니다~");
+        }
     }
 
     private boolean isStaticRequest(String resourcePath) {
