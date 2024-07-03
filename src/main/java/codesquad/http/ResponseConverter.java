@@ -10,13 +10,15 @@ public class ResponseConverter {
         StringBuilder sb = new StringBuilder();
 
         // StartLine
-        String responseLine = response.protocol() + " " + response.status() + "\r\n";
+        String responseLine = response.protocol() + " " + response.status().getCode() + " " + response.status().getMessage() + "\r\n";
         sb.append(responseLine);
 
         // Headers
-        for (Map.Entry<String, String> entry : response.headers().entrySet()) {
-            String header = entry.getKey() + ": " + entry.getValue() + "\r\n";
-            sb.append(header);
+        if (response.headers() != null) {
+            for (Map.Entry<String, String> entry : response.headers().entrySet()) {
+                String header = entry.getKey() + ": " + entry.getValue() + "\r\n";
+                sb.append(header);
+            }
         }
 
         // Body
