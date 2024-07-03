@@ -9,6 +9,8 @@ public class StringUtil {
             return "";
         }
 
-        return split[split.length - 1];
+        String uri = split[split.length - 1];
+        split = uri.split("\\?");
+        return split[0];
     }
 }

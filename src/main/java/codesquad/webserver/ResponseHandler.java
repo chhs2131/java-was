@@ -22,13 +22,24 @@ public class ResponseHandler {
         // TODO 정적파일만 고려해서 반환중!
         String resourcePath = httpRequest.path();
 
-        String mimeType = getContentType(resourcePath);
-        String fileData = getStaticFile(resourcePath);
+        if (isStaticRequest(resourcePath)) {
+            String mimeType = getContentType(resourcePath);
+            String fileData = getStaticFile(resourcePath);
 
-        Map<String, String> headers = new HashMap<>();
-        headers.put("Content-Type", mimeType);
-        return new HttpResponse("HTTP/1.1", "200 OK", headers, fileData);
+            Map<String, String> headers = new HashMap<>();
+            headers.put("Content-Type", mimeType);
+            return new HttpResponse("HTTP/1.1", "200 OK", headers, fileData);
+        }
 
+        return new HttpResponse("HTTP/1.1", "404 Not Found", null, "NULL 발생");
+    }
+
+    private boolean isStaticRequest(String resourcePath) {
+        String extension = StringUtil.getExtension(resourcePath);
+        if (extension == null || extension.isEmpty()) {
+            return false;
+        }
+        return true;
     }
 
     private String getContentType(String staticFilePath) {

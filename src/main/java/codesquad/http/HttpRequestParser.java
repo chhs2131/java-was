@@ -9,20 +9,37 @@ public class HttpRequestParser {
     public static HttpRequest parse(String message) {
         String[] lines = message.split("\n");
 
+        // Start-Line
         String[] startLine = lines[0].split(" ");
         String method = startLine[0];
-        String path = startLine[1];
+        String[] pathAndQueryString = startLine[1].split("\\?");
+        String path = pathAndQueryString[0];
+        Map<String, String> query = new HashMap<>();
+        if (pathAndQueryString.length > 1) {
+            query = parseQueryString(pathAndQueryString[1]);
+        }
         String protocol = startLine[2];
 
+        // Headers
         Map<String, String> headers = parseHeaders(lines);
 
+        // Body
         int contentLength = 0;
         if (headers.containsKey("Content-Length")) {
             contentLength = Integer.parseInt(headers.get("Content-Length"));
         }
         String body = parseBody(lines, contentLength);
 
-        return new HttpRequest(method, path, protocol, headers, body);
+        return new HttpRequest(method, path, query, protocol, headers, body);
+    }
+
+    private static Map<String, String> parseQueryString(String queryString) {
+        Map<String, String> query = new HashMap<>();
+        for (String pair : queryString.split("&")) {
+            String[] keyValue = pair.split("=");
+            query.put(keyValue[0], keyValue[1]);
+        }
+        return query;
     }
 
     private static Map<String, String> parseHeaders(String[] lines) {
@@ -57,7 +74,7 @@ public class HttpRequestParser {
             body.append(lines[i]).append("\n");
         }
 
-        if (body.length() > 0 && body.charAt(body.length() - 1) == '\n') {
+        if (!body.isEmpty() && body.charAt(body.length() - 1) == '\n') {
             body.deleteCharAt(body.length() - 1);
         }
 

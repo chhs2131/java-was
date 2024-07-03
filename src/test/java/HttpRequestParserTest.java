@@ -26,6 +26,27 @@ class HttpRequestParserTest {
     }
 
     @Test
+    @DisplayName("QueryString이 존재하는 경우")
+    public void test_handles_http_requests_with_malformed_headers_with_query_string() {
+        // Given
+        String message = "GET /index.html?param1=value1&param2=value2 HTTP/1.1\nHost www.example.com\n\n";
+
+        // When
+        HttpRequest request = HttpRequestParser.parse(message);
+
+        // Then
+        assertEquals("GET", request.method());
+        assertEquals("/index.html", request.path());
+        assertEquals("HTTP/1.1", request.protocol());
+        assertTrue(request.headers().isEmpty());
+        assertTrue(request.body().isEmpty());
+        assertTrue(request.queryString().containsKey("param1"));
+        assertTrue(request.queryString().containsValue("value1"));
+        assertTrue(request.queryString().containsKey("param2"));
+        assertTrue(request.queryString().containsValue("value2"));
+    }
+
+    @Test
     @DisplayName("Header와 Body가 없는 경우")
     public void test_handles_http_requests_with_no_headers() {
         // Given
