@@ -5,7 +5,7 @@ public class StringUtil {
 
     public static String getExtension(String path) {
         String[] split = path.split("\\.");
-        if (split.length == 0) {
+        if (split.length <= 1) {
             return "";
         }
 

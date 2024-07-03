@@ -29,10 +29,14 @@ public class ResponseHandler {
 
             Map<String, String> headers = new HashMap<>();
             headers.put("Content-Type", mimeType);
-            return new HttpResponse(HttpProtocol.HTTP_1_1, HttpStatus.OK, headers, fileData);
+            try {
+                return new HttpResponse(HttpProtocol.HTTP_1_1, HttpStatus.OK, headers, fileData);
+            } catch (Exception e) {
+                return new HttpResponse(HttpProtocol.HTTP_1_1, HttpStatus.NOT_FOUND, null, "못찾겠습니다~");
+            }
         }
 
-        return new HttpResponse(HttpProtocol.HTTP_1_1, HttpStatus.NOT_FOUND, null, "없음없음!!! 발생");
+        return new HttpResponse(HttpProtocol.HTTP_1_1, HttpStatus.BAD_REQUEST, null, "요청이 잘못된 것 같은데요?");
     }
 
     private boolean isStaticRequest(String resourcePath) {
