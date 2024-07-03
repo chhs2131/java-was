@@ -40,7 +40,11 @@ public class HttpRequestParser {
         Map<String, String> query = new HashMap<>();
         for (String pair : queryString.split("&")) {
             String[] keyValue = pair.split("=");
-            query.put(keyValue[0], keyValue[1]);
+            if (keyValue.length == 2) {
+                query.put(keyValue[0], keyValue[1]);
+            } else {  // QueryString value값이 비어있는 경우
+                query.put(keyValue[0], "");
+            }
         }
         return query;
     }
