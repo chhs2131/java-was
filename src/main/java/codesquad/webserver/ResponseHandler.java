@@ -10,7 +10,6 @@ import codesquad.util.StringUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.io.*;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -19,7 +18,11 @@ import java.util.Map;
  */
 public class ResponseHandler {
     private static final Logger logger = LoggerFactory.getLogger(ResponseHandler.class);
-    private static final String STATIC_FILE_PATH = "src/main/resources/static";
+    private final StaticFileReader staticFileReader;
+
+    public ResponseHandler() {
+        staticFileReader = new StaticFileReader();
+    }
 
     public HttpResponse handle(HttpRequest httpRequest) {
         String path = httpRequest.path();
@@ -81,20 +84,6 @@ public class ResponseHandler {
     }
 
     private String getStaticFile(String path) {
-        String filePath = STATIC_FILE_PATH + path;
-
-        File file = new File(filePath);
-        if (!file.exists()) {
-            throw new IllegalArgumentException("파일이 존재하지 않습니다. path: " + filePath);
-        }
-
-        try (FileInputStream fileInputStream = new FileInputStream(filePath)) {
-            byte[] fileBytes = fileInputStream.readAllBytes();
-            return new String(fileBytes, "UTF-8");
-        }  catch (FileNotFoundException e) {
-            throw new IllegalArgumentException("파일을 찾을 수 없습니다. path: " + filePath, e);
-        } catch (IOException e) {
-            throw new IllegalArgumentException("파일을 읽는 중 오류가 발생했습니다. path: " + filePath, e);
-        }
+        return staticFileReader.read(path);
     }
 }
