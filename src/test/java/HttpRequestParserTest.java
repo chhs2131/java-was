@@ -5,6 +5,8 @@ import codesquad.http.type.HttpProtocol;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
+import java.util.Map;
+
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
@@ -68,5 +70,29 @@ class HttpRequestParserTest {
         assertEquals(HttpProtocol.HTTP_1_1, request.protocol());
         assertEquals("www.example.com", request.headers().get("Host"));
         assertTrue(request.body().isEmpty());
+    }
+
+    @Test
+    @DisplayName("QueryString에 포함된 이메일과 한글 해석을 성공한다")
+    public void test_handle_querystring_with_email_and_korean() {
+        String message = "GET /user/create?userId=javajigi&password=password&name=%EB%B0%95%EC%9E%AC%EC%84%B1&email=javajigi%40slipp.net HTTP/1.1\n" +
+                "Host: localhost:8080\n" +
+                "Connection: keep-alive\n" +
+                "Accept: */*";
+
+        HttpRequest request = HttpRequestParser.parse(message);
+        System.out.println(request);
+
+        assertEquals(HttpMethod.GET, request.method());
+        assertEquals("/user/create", request.path());
+        assertEquals(HttpProtocol.HTTP_1_1, request.protocol());
+        assertEquals("localhost:8080", request.headers().get("Host"));
+        assertTrue(request.body().isEmpty());
+
+        Map<String, String> query = request.queryString();
+        assertEquals("javajigi", query.get("userId"));
+        assertEquals("password", query.get("password"));
+        assertEquals("박재성", query.get("name"));
+        assertEquals("javajigi@slipp.net", query.get("email"));
     }
 }

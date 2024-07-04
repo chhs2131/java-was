@@ -31,8 +31,9 @@ public class ResponseHandler {
             String name = httpRequest.queryString().get("name");
             String password = httpRequest.queryString().get("password");
             String nickname = httpRequest.queryString().get("nickname");
+            String email = httpRequest.queryString().get("email");
 
-            final User user = new User(name, password, nickname);
+            final User user = new User(name, password, nickname, email);
             logger.debug("회원가입을 완료했습니다. {}", user);
 
             return new HttpResponse(HttpProtocol.HTTP_1_1, HttpStatus.CREATED, null, "유저가 생성되었습니다.");
