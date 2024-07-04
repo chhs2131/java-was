@@ -35,6 +35,16 @@
         />
       </div>
       <div class="textfield textfield_size_s">
+        <p class="title_textfield">이메일</p>
+        <input
+                id="email"
+                name="email"
+                class="input_textfield"
+                placeholder="이메일을 입력해주세요"
+                autocomplete="email"
+        />
+      </div>
+      <div class="textfield textfield_size_s">
         <p class="title_textfield">닉네임</p>
         <input
                 id="nickname"
@@ -69,17 +79,19 @@
 <script>
   document.getElementById('registration-btn').addEventListener('click', function() {
     var username = document.getElementById('username').value;
+    var email = document.getElementById('email').value;
     var nickname = document.getElementById('nickname').value;
     var password = document.getElementById('password').value;
 
-    if (!username || !nickname || !password) {
+    if (!username || !nickname || !password || !email) {
       alert('모든 필드를 입력해주세요.');
       return;
     }
 
     var queryString = '?name=' + encodeURIComponent(username) +
             '&nickname=' + encodeURIComponent(nickname) +
-            '&password=' + encodeURIComponent(password);
+            '&password=' + encodeURIComponent(password) +
+            '&email=' + encodeURIComponent(email);
 
     window.location.href = '/create' + queryString;
   });
