@@ -4,10 +4,10 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.net.Socket;
 
-public class HttpInputStream {
+public class SocketReader {
     private final Socket socket;
 
-    public HttpInputStream(Socket socket) {
+    public SocketReader(Socket socket) {
         this.socket = socket;
     }
 

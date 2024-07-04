@@ -3,8 +3,8 @@ package codesquad.webserver;
 import codesquad.http.HttpRequest;
 import codesquad.http.HttpResponse;
 import codesquad.http.ResponseConverter;
-import codesquad.socket.HttpInputStream;
-import codesquad.socket.HttpOutputStream;
+import codesquad.socket.SocketReader;
+import codesquad.socket.SocketWriter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -23,16 +23,15 @@ public record HttpTask(Socket clientSocket, RequestHandler requestHandler, Respo
     @Override
     public void run() {
         try {
-            HttpInputStream inputStream = new HttpInputStream(clientSocket);
-            HttpOutputStream outputStream = new HttpOutputStream(clientSocket);
-
-            String message = inputStream.read();
+            SocketReader socketReader = new SocketReader(clientSocket);
+            SocketWriter socketWriter = new SocketWriter(clientSocket);
+            String message = socketReader.read();
 
             HttpRequest request = requestHandler.handle(message);
             HttpResponse response = responseHandler.handle(request);
 
             byte[] socketBytes = ResponseConverter.toSocketBytes(response);
-            outputStream.write(socketBytes);
+            socketWriter.write(socketBytes);
 
             clientSocket.close();
         } catch (IOException e) {
