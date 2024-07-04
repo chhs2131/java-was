@@ -1,90 +1,37 @@
 package codesquad.webserver;
 
-import codesquad.http.type.ContentType;
 import codesquad.http.HttpRequest;
 import codesquad.http.HttpResponse;
 import codesquad.http.type.HttpProtocol;
 import codesquad.http.type.HttpStatus;
-import codesquad.model.User;
-import codesquad.util.StringUtil;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import codesquad.webserver.handler.DynamicRequestHandler;
+import codesquad.webserver.handler.ReservedRequestHandler;
+import codesquad.webserver.handler.RouterHandler;
+import codesquad.webserver.handler.StaticFileRequestHandler;
 
-import java.util.HashMap;
-import java.util.Map;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
- * Socket을 통해 HTTP 응답을 진행합니다.
+ * 요청에 해당하는 로직을 수행하고, HTTP 응답을 진행합니다.
  */
 public class ResponseHandler {
-    private static final Logger logger = LoggerFactory.getLogger(ResponseHandler.class);
-    private final StaticFileReader staticFileReader;
-
-    public ResponseHandler() {
-        staticFileReader = new StaticFileReader();
+    private static final List<RouterHandler> handlers = new ArrayList<>();
+    static {
+        handlers.add(new DynamicRequestHandler());
+        handlers.add(new ReservedRequestHandler());
+        handlers.add(new StaticFileRequestHandler());
     }
 
     public HttpResponse handle(HttpRequest httpRequest) {
-        String path = httpRequest.path();
-
-        if (path.equals("/create")) {
-            String name = httpRequest.queryString().get("name");
-            String password = httpRequest.queryString().get("password");
-            String nickname = httpRequest.queryString().get("nickname");
-            String email = httpRequest.queryString().get("email");
-
-            final User user = new User(name, password, nickname, email);
-            logger.debug("회원가입을 완료했습니다. {}", user);
-
-            return new HttpResponse(HttpProtocol.HTTP_1_1, HttpStatus.CREATED, null, "유저가 생성되었습니다.");
-        }
-
-        // TODO 정적 파일에 대한 요청인지 판단을 어떻게 할 것인가요??
-        String mimeType = "";
-        String fileData = "";
-        String resourcePath = "";
-        Map<String, String> headers = new HashMap<>();
-
-        if (path.equals("/registration")) {
-            mimeType = ContentType.HTML.getMimeType();
-            headers.put("Content-Type", mimeType);
-            resourcePath = "/registration/index.html";
-        }
-        else if (isStaticRequest(path)) {
-            mimeType = getContentType(path);
-            headers.put("Content-Type", mimeType);
-            resourcePath = path;
-        }
-
-        // 정적 파일이 아닌 경우
-        if (resourcePath.isEmpty()) {
-            return new HttpResponse(HttpProtocol.HTTP_1_1, HttpStatus.BAD_REQUEST, null, "요청이 잘못된 것 같은데요?");
-        }
-
-        // 정적 파일 응답
-        try {
-            fileData = getStaticFile(resourcePath);
-            return new HttpResponse(HttpProtocol.HTTP_1_1, HttpStatus.OK, headers, fileData);
-        } catch (Exception e) {
-            logger.debug("HTTP NotFound Exception. {}", resourcePath);
-            return new HttpResponse(HttpProtocol.HTTP_1_1, HttpStatus.NOT_FOUND, null, "못찾겠습니다~");
-        }
+        return handlers.stream()
+                .filter(handler -> handler.support(httpRequest))
+                .findFirst()
+                .map(handler -> handler.handle(httpRequest))
+                .orElse(createBadRequest());
     }
 
-    private boolean isStaticRequest(String resourcePath) {
-        String extension = StringUtil.getExtension(resourcePath);
-        if (extension == null || extension.isEmpty()) {
-            return false;
-        }
-        return true;
-    }
-
-    private String getContentType(String staticFilePath) {
-        String extension = StringUtil.getExtension(staticFilePath);
-        return ContentType.from(extension).getMimeType();
-    }
-
-    private String getStaticFile(String path) {
-        return staticFileReader.read(path);
+    private HttpResponse createBadRequest() {
+        return new HttpResponse(HttpProtocol.HTTP_1_1, HttpStatus.BAD_REQUEST, null, "요청이 잘못된 것 같은데요?");
     }
 }
