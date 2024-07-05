@@ -1,27 +1,37 @@
 package codesquad.webserver;
 
 import codesquad.http.HttpRequest;
-import codesquad.http.HttpRequestParser;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import codesquad.http.HttpResponse;
+import codesquad.http.type.HttpProtocol;
+import codesquad.http.type.HttpStatus;
+import codesquad.webserver.handler.DynamicRequestHandler;
+import codesquad.webserver.handler.ReservedRequestHandler;
+import codesquad.webserver.handler.RouterHandler;
+import codesquad.webserver.handler.StaticFileRequestHandler;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
- * Socket에서 HTTP 요청을 입력받고 파싱합니다.
+ * 요청에 해당하는 로직을 수행하고, HTTP 응답을 진행합니다.
  */
 public class RequestHandler {
-    private static final Logger logger = LoggerFactory.getLogger(RequestHandler.class);
-
-    public HttpRequest handle(String message) {
-        // HTTP 파싱
-        HttpRequest request = parseHttpMessage(message);
-        logger.debug("HTTP Request! {} {} {}", request.method(), request.path(), request.protocol());
-        logger.debug("HTTP Headers! size: {}", request.headers().size());
-        logger.debug("HTTP Body! {}", request.body());
-
-        return request;
+    private static final List<RouterHandler> handlers = new ArrayList<>();
+    static {
+        handlers.add(new DynamicRequestHandler());
+        handlers.add(new ReservedRequestHandler());
+        handlers.add(new StaticFileRequestHandler());
     }
 
-    private HttpRequest parseHttpMessage(String message) {
-        return HttpRequestParser.parse(message);
+    public HttpResponse handle(HttpRequest httpRequest) {
+        return handlers.stream()
+                .filter(handler -> handler.support(httpRequest))
+                .findFirst()
+                .map(handler -> handler.handle(httpRequest))
+                .orElse(createBadRequest());
+    }
+
+    private HttpResponse createBadRequest() {
+        return new HttpResponse(HttpProtocol.HTTP_1_1, HttpStatus.BAD_REQUEST, null, "요청이 잘못된 것 같은데요?");
     }
 }
