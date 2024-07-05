@@ -4,10 +4,7 @@ import codesquad.http.HttpRequest;
 import codesquad.http.HttpResponse;
 import codesquad.http.type.HttpProtocol;
 import codesquad.http.type.HttpStatus;
-import codesquad.webserver.handler.DynamicRequestHandler;
-import codesquad.webserver.handler.ReservedRequestHandler;
-import codesquad.webserver.handler.RouterHandler;
-import codesquad.webserver.handler.StaticFileRequestHandler;
+import codesquad.webserver.handler.*;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -19,8 +16,7 @@ public class RequestHandler {
     private static final List<RouterHandler> handlers = new ArrayList<>();
     static {
         handlers.add(new DynamicRequestHandler());
-        handlers.add(new ReservedRequestHandler());
-        handlers.add(new StaticFileRequestHandler());
+        handlers.add(new StaticRequestHandler());
     }
 
     public HttpResponse handle(HttpRequest httpRequest) {
