@@ -5,6 +5,7 @@ import java.io.InputStream;
 import java.net.Socket;
 
 public class SocketReader {
+    private static final int BUFFER_SIZE = 1024;
     private final Socket socket;
 
     public SocketReader(Socket socket) {
@@ -18,10 +19,16 @@ public class SocketReader {
     private String getInputStream(Socket clientSocket) {
         try {
             InputStream input = clientSocket.getInputStream();
-            byte[] inputData = new byte[1024];
+            byte[] buffer = new byte[BUFFER_SIZE];
 
-            int length = input.read(inputData);
-            return new String(inputData, 0, length);
+            StringBuilder sb = new StringBuilder();
+            int length = 0;
+            do {
+                length = input.read(buffer);
+                sb.append(new String(buffer, 0, length));
+            } while (length == BUFFER_SIZE);
+
+            return sb.toString();
         } catch (IOException e) {
             e.printStackTrace();
             throw new IllegalArgumentException("올바르지 않은 입력입니다.");
