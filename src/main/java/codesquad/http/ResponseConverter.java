@@ -7,6 +7,10 @@ public class ResponseConverter {
     private ResponseConverter() {}
 
     public static byte[] toSocketBytes(HttpResponse response) {
+        if (response == null) {
+            throw new IllegalArgumentException("null은 bytes로 변환할 수 없습니다.");
+        }
+
         StringBuilder sb = new StringBuilder();
 
         // StartLine

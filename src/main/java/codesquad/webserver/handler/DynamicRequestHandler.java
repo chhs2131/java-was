@@ -16,6 +16,7 @@ public class DynamicRequestHandler implements RouterHandler {
     private static final Logger logger = LoggerFactory.getLogger(DynamicRequestHandler.class);
     private static final Map<String, Function<HttpRequest, HttpResponse>> mapping = new HashMap<>();
     static {
+        // 외부에서 전달받도록 수정 필요
         mapping.put("/create", DynamicRequestHandler::getCreateUser);
     }
 
