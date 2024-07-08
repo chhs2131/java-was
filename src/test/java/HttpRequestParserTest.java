@@ -1,5 +1,5 @@
 import codesquad.http.HttpRequest;
-import codesquad.http.HttpRequestParser;
+import codesquad.http.parser.HttpRequestParser;
 import codesquad.http.type.HttpMethod;
 import codesquad.http.type.HttpProtocol;
 import org.junit.jupiter.api.DisplayName;

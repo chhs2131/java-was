@@ -1,7 +1,7 @@
 package codesquad.webserver;
 
 import codesquad.http.HttpRequest;
-import codesquad.http.HttpRequestParser;
+import codesquad.http.parser.HttpRequestParser;
 import codesquad.http.HttpResponse;
 import codesquad.http.ResponseConverter;
 import codesquad.socket.SocketReader;
@@ -26,6 +26,8 @@ public record HttpTask(Socket clientSocket, RequestHandler requestHandler) imple
             SocketReader socketReader = new SocketReader(clientSocket);
             SocketWriter socketWriter = new SocketWriter(clientSocket);
             String message = socketReader.read();
+
+            logger.debug(message);
 
             HttpRequest request = HttpRequestParser.parse(message);
             logger.debug("HTTP Request: {} {} {}", request.method(), request.path(), request.protocol());
