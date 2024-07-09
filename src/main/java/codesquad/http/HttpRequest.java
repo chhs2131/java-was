@@ -1,5 +1,6 @@
 package codesquad.http;
 
+import codesquad.http.type.HttpHeader;
 import codesquad.http.type.HttpMethod;
 import codesquad.http.type.HttpProtocol;
 
@@ -10,7 +11,7 @@ public record HttpRequest(
         String path,
         Map<String, String> queryString,
         HttpProtocol protocol,
-        Map<String, String> headers,
+        HttpHeader headers,
         Map<String, String> body
 ) {
 }

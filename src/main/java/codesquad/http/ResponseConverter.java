@@ -1,7 +1,8 @@
 package codesquad.http;
 
 import java.io.UnsupportedEncodingException;
-import java.util.Map;
+import java.util.List;
+import java.util.Map.Entry;
 
 public class ResponseConverter {
     private ResponseConverter() {}
@@ -19,9 +20,11 @@ public class ResponseConverter {
 
         // Headers
         if (response.headers() != null) {
-            for (Map.Entry<String, String> entry : response.headers().entrySet()) {
-                String header = entry.getKey() + ": " + entry.getValue() + "\r\n";
-                sb.append(header);
+            for (Entry<String, List<String>> entry : response.headers().entrySet()) {
+                for (String value : entry.getValue()) {
+                    String header = entry.getKey() + ": " + value + "\r\n";
+                    sb.append(header);
+                }
             }
         }
 

@@ -1,5 +1,6 @@
 package codesquad.http;
 
+import codesquad.http.type.HttpHeader;
 import codesquad.http.type.HttpProtocol;
 import codesquad.http.type.HttpStatus;
 import org.junit.jupiter.api.DisplayName;
@@ -16,7 +17,7 @@ class ResponseConverterTest {
         HttpResponse response = new HttpResponse(
                 HttpProtocol.HTTP_1_1,
                 HttpStatus.OK,
-                Map.of("Content-Type", "text/plain"),
+                HttpHeader.of("Content-Type", "text/plain"),
                 "Hello, World!"
         );
 
@@ -32,7 +33,7 @@ class ResponseConverterTest {
         HttpResponse response = new HttpResponse(
                 HttpProtocol.HTTP_1_1,
                 HttpStatus.NO_CONTENT,
-                Map.of("Content-Type", "text/plain"),
+                HttpHeader.of("Content-Type", "text/plain"),
                 ""
         );
 
@@ -58,7 +59,7 @@ class ResponseConverterTest {
         HttpResponse response = new HttpResponse(
                 HttpProtocol.HTTP_1_1,
                 HttpStatus.OK,
-                Map.of(),
+                HttpHeader.createEmpty(),
                 "Hello, World!"
         );
 

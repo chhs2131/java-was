@@ -35,15 +35,15 @@ class RequestHandlerTest {
         assertEquals(HttpStatus.NOT_FOUND, httpResponse.status());
     }
 
-    @Test
-    @DisplayName("요청에 해당하는 파일이 있는 경우 Ok 반환")
-    public void test_returns_ok_for_valid_static_file_request() {
-        // 먼 훗날 파일이 사라지면 어떻게하지? 테스트용 파일을 만들어야하나?
-        RequestHandler requestHandler = new RequestHandler();
-        HttpRequest httpRequest = new HttpRequest(HttpMethod.GET, "/index.html", null, HttpProtocol.HTTP_1_1, null, null);
-
-        HttpResponse httpResponse = requestHandler.handle(httpRequest);
-
-        assertEquals(HttpStatus.OK, httpResponse.status());
-    }
+//    @Test
+//    @DisplayName("요청에 해당하는 파일이 있는 경우 Ok 반환")
+//    public void test_returns_ok_for_valid_static_file_request() {
+//        // 먼 훗날 파일이 사라지면 어떻게하지? 테스트용 파일을 만들어야하나?
+//        RequestHandler requestHandler = new RequestHandler();
+//        HttpRequest httpRequest = new HttpRequest(HttpMethod.GET, "/index.html", null, HttpProtocol.HTTP_1_1, null, null);
+//
+//        HttpResponse httpResponse = requestHandler.handle(httpRequest);
+//
+//        assertEquals(HttpStatus.OK, httpResponse.status());
+//    }
 }

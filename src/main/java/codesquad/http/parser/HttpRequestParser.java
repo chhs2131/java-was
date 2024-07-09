@@ -1,6 +1,7 @@
 package codesquad.http.parser;
 
 import codesquad.http.HttpRequest;
+import codesquad.http.type.HttpHeader;
 import codesquad.http.type.StartLine;
 
 import java.util.HashMap;
@@ -13,7 +14,7 @@ public class HttpRequestParser {
         String[] lines = message.split("\n");
 
         StartLine startLine = StartLineParser.parse(lines);
-        Map<String, String> headers = HeaderParser.parse(lines);
+        HttpHeader headers = HeaderParser.parse(lines);
 
         // Body
         int contentLength = getContentLength(headers);
@@ -34,16 +35,16 @@ public class HttpRequestParser {
                 body);
     }
 
-    private static int getContentLength(Map<String, String> headers) {
+    private static int getContentLength(HttpHeader headers) {
         int contentLength = 0;
-        if (headers.containsKey("Content-Length")) {
+        if (headers.contains("Content-Length")) {
             contentLength = Integer.parseInt(headers.get("Content-Length"));
         }
         return contentLength;
     }
 
-    private static boolean isFormUrlencoded(Map<String, String> headers) {
-        if (!headers.containsKey("Content-Type")) {
+    private static boolean isFormUrlencoded(HttpHeader headers) {
+        if (!headers.contains("Content-Type")) {
             return false;
         }
         return headers.get("Content-Type").equals("application/x-www-form-urlencoded");

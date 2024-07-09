@@ -3,6 +3,7 @@ package codesquad.webserver.handler;
 import codesquad.http.HttpRequest;
 import codesquad.http.HttpResponse;
 import codesquad.http.type.ContentType;
+import codesquad.http.type.HttpHeader;
 import codesquad.http.type.HttpProtocol;
 import codesquad.http.type.HttpStatus;
 import codesquad.util.StringUtil;
@@ -45,8 +46,8 @@ public class StaticRequestHandler implements RouterHandler {
         String mimeType = getMimeType(resourcePath);
 
         String fileData = "";
-        Map<String, String> headers = new HashMap<>();
-        headers.put("Content-Type", mimeType);
+        HttpHeader headers = new HttpHeader();
+        headers.add("Content-Type", mimeType);
 
         try {
             fileData = getStaticFile(resourcePath);
