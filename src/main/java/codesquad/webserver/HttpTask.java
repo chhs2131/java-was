@@ -26,7 +26,6 @@ public record HttpTask(Socket clientSocket, RequestHandler requestHandler) imple
             SocketReader socketReader = new SocketReader(clientSocket);
             SocketWriter socketWriter = new SocketWriter(clientSocket);
             String message = socketReader.read();
-
             logger.debug(message);
 
             HttpRequest request = HttpRequestParser.parse(message);

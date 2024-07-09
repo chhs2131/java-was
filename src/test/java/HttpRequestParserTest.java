@@ -23,7 +23,7 @@ class HttpRequestParserTest {
         assertEquals(HttpProtocol.HTTP_1_1, request.protocol());
         assertEquals("www.example.com", request.headers().get("Host"));
         assertEquals("11", request.headers().get("Content-Length"));
-        assertEquals("Hello World", request.body());
+        assertEquals("Hello World", request.body().get("raw"));
     }
 
     @Test
@@ -37,7 +37,7 @@ class HttpRequestParserTest {
         assertEquals("/index.html", request.path());
         assertEquals(HttpProtocol.HTTP_1_1, request.protocol());
         assertTrue(request.headers().isEmpty());
-        assertTrue(request.body().isEmpty());
+        assertTrue(request.body().get("raw").isEmpty());
         assertTrue(request.queryString().containsKey("param1"));
         assertTrue(request.queryString().containsValue("value1"));
         assertTrue(request.queryString().containsKey("param2"));
@@ -55,7 +55,7 @@ class HttpRequestParserTest {
         assertEquals("/index.html", request.path());
         assertEquals(HttpProtocol.HTTP_1_1, request.protocol());
         assertTrue(request.headers().isEmpty());
-        assertTrue(request.body().isEmpty());
+        assertTrue(request.body().get("raw").isEmpty());
     }
 
     @Test
@@ -69,7 +69,7 @@ class HttpRequestParserTest {
         assertEquals("/index.html", request.path());
         assertEquals(HttpProtocol.HTTP_1_1, request.protocol());
         assertEquals("www.example.com", request.headers().get("Host"));
-        assertTrue(request.body().isEmpty());
+        assertTrue(request.body().get("raw").isEmpty());
     }
 
     @Test
@@ -81,13 +81,12 @@ class HttpRequestParserTest {
                 "Accept: */*";
 
         HttpRequest request = HttpRequestParser.parse(message);
-        System.out.println(request);
 
         assertEquals(HttpMethod.GET, request.method());
         assertEquals("/user/create", request.path());
         assertEquals(HttpProtocol.HTTP_1_1, request.protocol());
         assertEquals("localhost:8080", request.headers().get("Host"));
-        assertTrue(request.body().isEmpty());
+        assertTrue(request.body().get("raw").isEmpty());
 
         Map<String, String> query = request.queryString();
         assertEquals("javajigi", query.get("userId"));

@@ -4,6 +4,8 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class HeaderParser {
+    private HeaderParser() {}
+
     public static Map<String, String> parse(String[] lines) {
         Map<String, String> headers = new HashMap<>();
 

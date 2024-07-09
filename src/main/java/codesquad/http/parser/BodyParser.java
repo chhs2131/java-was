@@ -1,19 +1,25 @@
 package codesquad.http.parser;
 
-import java.util.List;
+import java.util.Map;
+
+import static codesquad.http.parser.KeyValueParser.getStringStringMap;
 
 public class BodyParser {
+    private BodyParser() {}
+
     public static String parse(String[] lines, int contentLength) {
+        return extractBody(lines, contentLength);
+    }
+
+    public static Map<String, String> parseFormBody(String[] lines, int contentLength) {
+        String body = extractBody(lines, contentLength);
+        return getStringStringMap(body);
+    }
+
+    private static String extractBody(String[] lines, int contentLength) {
         StringBuilder body = new StringBuilder();
 
-        int bodyStartIndex = 0;
-        for (int i = 1; i < lines.length; i++) {
-            if (lines[i].trim().isEmpty()) {
-                bodyStartIndex = i + 1;
-                break;
-            }
-        }
-
+        int bodyStartIndex = getBodyStartIndex(lines);
         for (int i = bodyStartIndex; i < lines.length; i++) {
             body.append(lines[i]).append("\n");
         }
@@ -22,7 +28,6 @@ public class BodyParser {
             body.deleteCharAt(body.length() - 1);
         }
 
-        // Content-Length를 참고하여 본문을 자릅니다.
         if (body.length() > contentLength) {
             body.setLength(contentLength);
         }
@@ -30,7 +35,14 @@ public class BodyParser {
         return body.toString();
     }
 
-    public static List<String> parseFormBody(String[] lines, int contentLength) {
-        throw new UnsupportedOperationException();
+    private static int getBodyStartIndex(String[] lines) {
+        int bodyStartIndex = 0;
+        for (int i = 1; i < lines.length; i++) {
+            if (lines[i].trim().isEmpty()) {
+                bodyStartIndex = i + 1;
+                break;
+            }
+        }
+        return bodyStartIndex;
     }
 }

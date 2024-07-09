@@ -11,6 +11,6 @@ public record HttpRequest(
         Map<String, String> queryString,
         HttpProtocol protocol,
         Map<String, String> headers,
-        String body
+        Map<String, String> body
 ) {
 }
