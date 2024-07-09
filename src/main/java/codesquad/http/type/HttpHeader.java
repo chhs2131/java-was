@@ -69,6 +69,15 @@ public class HttpHeader{
         return headers.entrySet();
     }
 
+    public Cookie getCookies() {
+        if (!contains("Cookie")) {
+            return Cookie.createEmpty();
+        }
+
+        // Cookie 벨류 리스트를 Cookie 클래스에게 전달해 파싱하고 그것을 반환한다.
+        return Cookie.create(headers.get("Cookie"));
+    }
+
     public static HttpHeader of(String name, String value) {
         final HttpHeader httpHeader = new HttpHeader();
         httpHeader.add(name, value);

@@ -9,10 +9,10 @@ public class KeyValueParser {
     private KeyValueParser() {};
 
     public static Map<String, String> parse(String body) {
-        return getStringStringMap(body);
+        return parseQuertString(body);
     }
 
-    public static Map<String, String> getStringStringMap(String body) {
+    public static Map<String, String> parseQuertString(String body) {
         Map<String, String> query = new HashMap<>();
         for (String pair : body.split("&")) {
             String[] keyValue = pair.split("=");
@@ -31,5 +31,23 @@ public class KeyValueParser {
             }
         }
         return query;
+    }
+
+    public static Map<String, String> parseCookie(String cookieHeader) {
+        Map<String, String> cookies = new HashMap<>();
+
+        if (cookieHeader == null || cookieHeader.isEmpty()) {
+            return cookies;
+        }
+
+        String[] pairs = cookieHeader.split("; ");
+        for (String pair : pairs) {
+            String[] keyValue = pair.split("=", 2);
+            if (keyValue.length == 2) {
+                cookies.put(keyValue[0], keyValue[1]);
+            }
+        }
+
+        return cookies;
     }
 }

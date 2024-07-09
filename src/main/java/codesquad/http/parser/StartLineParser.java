@@ -25,6 +25,6 @@ public class StartLineParser {
     }
 
     private static Map<String, String> parseQueryString(String queryString) {
-        return KeyValueParser.getStringStringMap(queryString);
+        return KeyValueParser.parseQuertString(queryString);
     }
 }
