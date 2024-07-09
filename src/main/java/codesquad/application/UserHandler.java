@@ -3,6 +3,7 @@ package codesquad.application;
 import codesquad.database.UserDatabase;
 import codesquad.http.HttpRequest;
 import codesquad.http.HttpResponse;
+import codesquad.http.type.Cookie;
 import codesquad.http.type.HttpHeader;
 import codesquad.http.type.HttpProtocol;
 import codesquad.http.type.HttpStatus;
@@ -40,7 +41,10 @@ public class UserHandler {
             User user = UserDatabase.getUserByIdAndPassword(name, password);
             Session session = sessionManager.createSession(user);
 
-            HttpHeader headers = HttpHeader.of("Location", "/index.html", "Set-Cookie", "SID="+session.id()+";Path=/;");
+            // TODO Cookie 객체를 활용하도록 수정 필요! (Session 정보를 기반으로 Cookie를 생성하면될 듯)
+            HttpHeader headers = HttpHeader.of(
+                "Location", "/main/index.html",
+                "Set-Cookie", "SID="+session.id()+";Path=/;Max-Age=3600;Expires=Wed, 21 Oct 2025 07:28:00 KST");
             return new HttpResponse(HttpProtocol.HTTP_1_1, HttpStatus.FOUND, headers, "굿");
         } catch (IllegalArgumentException e) {
             logger.debug("유저 정보가 올바르지 않습니다. 이름:{}", name);
@@ -53,8 +57,15 @@ public class UserHandler {
 
     // POST /user/logout
     public static HttpResponse logout(HttpRequest httpRequest) {
-//        httpRequest.headers().get("Cookie"); // TODO 작성필요!
-//        return new HttpResponse(HttpProtocol.HTTP_1_1, HttpStatus.FOUND, Map.of("Location", "/index.html"), "굿");
-        throw new UnsupportedOperationException();
+        final Cookie cookies = httpRequest.headers().getCookies();
+        final String sid = cookies.get("SID");
+
+        sessionManager.removeSession(sid);
+        logger.debug("정상적으로 로그아웃하였습니다. sid:{}", sid);
+
+        HttpHeader headers = HttpHeader.of(
+            "Location", "/index.html",
+            "Set-Cookie", "SID=;Path=/;Max-Age=0");
+        return new HttpResponse(HttpProtocol.HTTP_1_1, HttpStatus.FOUND, headers, "로그아웃하였습니다.");
     }
 }

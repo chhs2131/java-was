@@ -27,6 +27,10 @@ public class SessionManager {
         return session;
     }
 
+    public void removeSession(String sessionId) {
+        SessionDatabase.removeSession(sessionId);
+    }
+
     public boolean existsSession(String sessionId) {
         return SessionDatabase.existsSession(sessionId);
     }

@@ -30,6 +30,10 @@ public class HttpHeader{
         headers.get(name).add(value);
     }
 
+    public void addCookie(Cookie cookie) {
+        // TODO
+    }
+
     /**
      * Header에 저장되어있는 값을 모두 반환합니다.
      * @param name (key값)
