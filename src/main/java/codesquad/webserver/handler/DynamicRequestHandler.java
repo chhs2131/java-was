@@ -18,7 +18,9 @@ public class DynamicRequestHandler implements RouterHandler {
     private static final Map<HandlerPath, Function<HttpRequest, HttpResponse>> mapping = new HashMap<>();
     static {
         // 외부에서 전달받도록 수정 필요
-        mapping.put(new HandlerPath(HttpMethod.POST, "/user/create"), UserHandler::getCreateUser);
+        mapping.put(new HandlerPath(HttpMethod.POST, "/user/create"), UserHandler::createUser);
+        mapping.put(new HandlerPath(HttpMethod.POST, "/user/login"), UserHandler::login);
+        mapping.put(new HandlerPath(HttpMethod.POST, "/user/logout"), UserHandler::logout);
     }
 
     @Override
