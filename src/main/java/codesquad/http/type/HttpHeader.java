@@ -6,7 +6,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
-import java.util.Optional;
 import java.util.Set;
 
 public class HttpHeader{
@@ -48,10 +47,14 @@ public class HttpHeader{
     /**
      * Header에 저장되어있는 값 중 첫번째 값을 반환합니다.
      * @param name (key값)
-     * @return String
+     * @return String (값이 존재하지 않는 경우 빈 리터럴 ""을 반환합니다.
      */
     public String get(String name) {
-        return Optional.ofNullable(getAll(name).get(0)).orElse("");
+        final List<String> all = getAll(name);
+        if (all.isEmpty()) {
+            return "";
+        }
+        return getAll(name).get(0);
     }
 
     public boolean contains(String name) {
