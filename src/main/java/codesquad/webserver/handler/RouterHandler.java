@@ -1,7 +1,7 @@
 package codesquad.webserver.handler;
 
-import codesquad.http.HttpRequest;
-import codesquad.http.HttpResponse;
+import codesquad.webserver.http.HttpRequest;
+import codesquad.webserver.http.HttpResponse;
 
 public interface RouterHandler {
     boolean support(HttpRequest httpRequest);

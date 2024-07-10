@@ -1,4 +1,4 @@
-package codesquad.http;
+package codesquad.webserver.http;
 
 import java.io.UnsupportedEncodingException;
 import java.util.List;

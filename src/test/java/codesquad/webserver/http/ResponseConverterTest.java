@@ -1,8 +1,10 @@
-package codesquad.http;
+package codesquad.webserver.http;
 
-import codesquad.http.type.HttpHeader;
-import codesquad.http.type.HttpProtocol;
-import codesquad.http.type.HttpStatus;
+import codesquad.webserver.http.HttpResponse;
+import codesquad.webserver.http.ResponseConverter;
+import codesquad.webserver.http.type.HttpHeader;
+import codesquad.webserver.http.type.HttpProtocol;
+import codesquad.webserver.http.type.HttpStatus;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 

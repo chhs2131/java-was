@@ -1,4 +1,4 @@
-package codesquad.socket;
+package codesquad.webserver.socket;
 
 import java.io.IOException;
 import java.io.OutputStream;

@@ -1,8 +1,8 @@
-package codesquad.http.parser;
+package codesquad.webserver.http.parser;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-import codesquad.http.type.Cookie;
+import codesquad.webserver.http.type.Cookie;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 

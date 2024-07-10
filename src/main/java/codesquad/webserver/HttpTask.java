@@ -1,11 +1,11 @@
 package codesquad.webserver;
 
-import codesquad.http.HttpRequest;
-import codesquad.http.parser.HttpRequestParser;
-import codesquad.http.HttpResponse;
-import codesquad.http.ResponseConverter;
-import codesquad.socket.SocketReader;
-import codesquad.socket.SocketWriter;
+import codesquad.webserver.http.HttpRequest;
+import codesquad.webserver.http.parser.HttpRequestParser;
+import codesquad.webserver.http.HttpResponse;
+import codesquad.webserver.http.ResponseConverter;
+import codesquad.webserver.socket.SocketReader;
+import codesquad.webserver.socket.SocketWriter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

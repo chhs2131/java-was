@@ -1,8 +1,6 @@
-package codesquad.http.parser;
+package codesquad.webserver.http.parser;
 
 import java.util.Map;
-
-import static codesquad.http.parser.KeyValueParser.parseQuertString;
 
 public class BodyParser {
     private BodyParser() {}
@@ -13,7 +11,7 @@ public class BodyParser {
 
     public static Map<String, String> parseFormBody(String[] lines, int contentLength) {
         String body = extractBody(lines, contentLength);
-        return parseQuertString(body);
+        return KeyValueParser.parseQuertString(body);
     }
 
     private static String extractBody(String[] lines, int contentLength) {

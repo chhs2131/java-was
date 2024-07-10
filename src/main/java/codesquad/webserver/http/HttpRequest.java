@@ -1,8 +1,8 @@
-package codesquad.http;
+package codesquad.webserver.http;
 
-import codesquad.http.type.HttpHeader;
-import codesquad.http.type.HttpMethod;
-import codesquad.http.type.HttpProtocol;
+import codesquad.webserver.http.type.HttpHeader;
+import codesquad.webserver.http.type.HttpMethod;
+import codesquad.webserver.http.type.HttpProtocol;
 
 import java.util.Map;
 

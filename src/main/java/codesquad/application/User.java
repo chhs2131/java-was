@@ -1,4 +1,4 @@
-package codesquad.model;
+package codesquad.application;
 
 import java.util.Objects;
 

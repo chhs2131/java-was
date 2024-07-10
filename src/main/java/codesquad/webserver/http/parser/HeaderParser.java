@@ -1,6 +1,6 @@
-package codesquad.http.parser;
+package codesquad.webserver.http.parser;
 
-import codesquad.http.type.HttpHeader;
+import codesquad.webserver.http.type.HttpHeader;
 
 public class HeaderParser {
     private HeaderParser() {}

@@ -1,7 +1,8 @@
-import codesquad.http.HttpRequest;
-import codesquad.http.parser.HttpRequestParser;
-import codesquad.http.type.HttpMethod;
-import codesquad.http.type.HttpProtocol;
+package codesquad.webserver.http.parser;
+
+import codesquad.webserver.http.HttpRequest;
+import codesquad.webserver.http.type.HttpMethod;
+import codesquad.webserver.http.type.HttpProtocol;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 

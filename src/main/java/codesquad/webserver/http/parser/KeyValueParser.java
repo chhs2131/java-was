@@ -1,4 +1,4 @@
-package codesquad.http.parser;
+package codesquad.webserver.http.parser;
 
 import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;

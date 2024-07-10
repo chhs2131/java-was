@@ -1,6 +1,6 @@
 package codesquad.webserver.handler;
 
-import codesquad.http.type.HttpMethod;
+import codesquad.webserver.http.type.HttpMethod;
 
 public record HandlerPath(
     HttpMethod method,

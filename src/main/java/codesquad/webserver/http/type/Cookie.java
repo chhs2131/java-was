@@ -1,6 +1,6 @@
-package codesquad.http.type;
+package codesquad.webserver.http.type;
 
-import codesquad.http.parser.KeyValueParser;
+import codesquad.webserver.http.parser.KeyValueParser;
 import codesquad.webserver.session.Session;
 
 import java.time.LocalDateTime;

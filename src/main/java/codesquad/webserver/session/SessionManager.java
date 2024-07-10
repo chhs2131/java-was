@@ -1,7 +1,7 @@
 package codesquad.webserver.session;
 
 import codesquad.database.SessionDatabase;
-import codesquad.model.User;
+import codesquad.application.User;
 
 import java.time.LocalDateTime;
 import java.util.HashMap;

@@ -1,13 +1,12 @@
 package codesquad.application;
 
 import codesquad.database.UserDatabase;
-import codesquad.http.HttpRequest;
-import codesquad.http.HttpResponse;
-import codesquad.http.type.Cookie;
-import codesquad.http.type.HttpHeader;
-import codesquad.http.type.HttpProtocol;
-import codesquad.http.type.HttpStatus;
-import codesquad.model.User;
+import codesquad.webserver.http.HttpRequest;
+import codesquad.webserver.http.HttpResponse;
+import codesquad.webserver.http.type.Cookie;
+import codesquad.webserver.http.type.HttpHeader;
+import codesquad.webserver.http.type.HttpProtocol;
+import codesquad.webserver.http.type.HttpStatus;
 import codesquad.webserver.session.Session;
 import codesquad.webserver.session.SessionManager;
 import org.slf4j.Logger;

@@ -1,8 +1,8 @@
-package codesquad.http.parser;
+package codesquad.webserver.http.parser;
 
-import codesquad.http.HttpRequest;
-import codesquad.http.type.HttpHeader;
-import codesquad.http.type.StartLine;
+import codesquad.webserver.http.HttpRequest;
+import codesquad.webserver.http.type.HttpHeader;
+import codesquad.webserver.http.type.StartLine;
 
 import java.util.HashMap;
 import java.util.Map;

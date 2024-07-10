@@ -1,11 +1,11 @@
 package codesquad.webserver.handler;
 
 import codesquad.application.UserHandler;
-import codesquad.http.HttpRequest;
-import codesquad.http.HttpResponse;
-import codesquad.http.type.HttpMethod;
-import codesquad.http.type.HttpProtocol;
-import codesquad.http.type.HttpStatus;
+import codesquad.webserver.http.HttpRequest;
+import codesquad.webserver.http.HttpResponse;
+import codesquad.webserver.http.type.HttpMethod;
+import codesquad.webserver.http.type.HttpProtocol;
+import codesquad.webserver.http.type.HttpStatus;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

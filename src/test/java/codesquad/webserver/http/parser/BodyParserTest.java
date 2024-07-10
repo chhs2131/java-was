@@ -1,10 +1,9 @@
-package codesquad.http.parser;
+package codesquad.webserver.http.parser;
 
-import org.junit.jupiter.api.Assertions;
+import codesquad.webserver.http.parser.BodyParser;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
-import java.util.List;
 import java.util.Map;
 
 import static org.assertj.core.api.Assertions.*;

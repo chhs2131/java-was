@@ -1,7 +1,8 @@
-package codesquad.http.type;
+package codesquad.webserver.http.type;
 
 import static org.junit.jupiter.api.Assertions.*;
 
+import codesquad.webserver.http.type.HttpHeader;
 import java.util.List;
 import java.util.stream.Stream;
 import org.junit.jupiter.api.DisplayName;

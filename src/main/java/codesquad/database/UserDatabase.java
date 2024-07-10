@@ -1,6 +1,6 @@
 package codesquad.database;
 
-import codesquad.model.User;
+import codesquad.application.User;
 
 import java.util.List;
 import java.util.concurrent.CopyOnWriteArrayList;

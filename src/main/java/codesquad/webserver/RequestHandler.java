@@ -1,9 +1,9 @@
 package codesquad.webserver;
 
-import codesquad.http.HttpRequest;
-import codesquad.http.HttpResponse;
-import codesquad.http.type.HttpProtocol;
-import codesquad.http.type.HttpStatus;
+import codesquad.webserver.http.HttpRequest;
+import codesquad.webserver.http.HttpResponse;
+import codesquad.webserver.http.type.HttpProtocol;
+import codesquad.webserver.http.type.HttpStatus;
 import codesquad.webserver.handler.*;
 
 import java.util.ArrayList;
