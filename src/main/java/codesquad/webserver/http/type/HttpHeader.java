@@ -32,20 +32,19 @@ public class HttpHeader{
 
     /**
      * Cookie의 값 전체를 Header에 추가합니다.
-     * @param cookie
+     * @param cookie 쿠키 클래스
      */
     public void setCookie(final Cookie cookie) {
         final StringBuilder sb = new StringBuilder();
 
         // TODO Cookie 클래스에서 관련 정보를 받기
         List<String> list = List.of("SID", "Path", "Domain", "Max-Age", "Expires", "Secure", "HttpOnly", "SameSite");
-        list.stream()
-                .forEach(key -> {
-                    if (!cookie.contains(key)) {
-                        return;
-                    }
-                    sb.append(key + "=" + cookie.get(key) + ";");
-                });
+        list.forEach(key -> {
+            if (!cookie.contains(key)) {
+                return;
+            }
+            sb.append(key).append("=").append(cookie.get(key)).append(";");
+        });
 
         headers.put("Set-Cookie", List.of(sb.toString()));
     }

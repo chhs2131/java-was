@@ -1,6 +1,5 @@
 package codesquad.webserver.http.parser;
 
-import codesquad.webserver.http.parser.BodyParser;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 

@@ -1,7 +1,5 @@
 package codesquad.webserver.http;
 
-import codesquad.webserver.http.HttpResponse;
-import codesquad.webserver.http.ResponseConverter;
 import codesquad.webserver.http.type.HttpHeader;
 import codesquad.webserver.http.type.HttpProtocol;
 import codesquad.webserver.http.type.HttpStatus;
@@ -48,9 +46,7 @@ class ResponseConverterTest {
     public void test_handles_null_http_response_gracefully() {
         HttpResponse response = null;
 
-        assertThrows(IllegalArgumentException.class, () -> {
-            ResponseConverter.toSocketBytes(response);
-        });
+        assertThrows(IllegalArgumentException.class, () -> ResponseConverter.toSocketBytes(response));
     }
 
     @Test

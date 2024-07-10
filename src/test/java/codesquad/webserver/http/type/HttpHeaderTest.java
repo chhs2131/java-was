@@ -2,7 +2,6 @@ package codesquad.webserver.http.type;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-import codesquad.webserver.http.type.HttpHeader;
 import java.util.List;
 import java.util.stream.Stream;
 import org.junit.jupiter.api.DisplayName;
@@ -18,9 +17,9 @@ class HttpHeaderTest {
     public void test_add_single_header_and_retrieve(String name, String value) {
         HttpHeader httpHeader = HttpHeader.createEmpty();
 
-        httpHeader.add("Content-Type", "text/plain");
+        httpHeader.add(name, value);
 
-        assertEquals("text/plain", httpHeader.get("Content-Type"));
+        assertEquals(value, httpHeader.get(name));
     }
 
     static Stream<Arguments> headerData() {

@@ -2,7 +2,6 @@ package codesquad.webserver.http.parser;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-import codesquad.webserver.http.parser.HeaderParser;
 import codesquad.webserver.http.type.HttpHeader;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;

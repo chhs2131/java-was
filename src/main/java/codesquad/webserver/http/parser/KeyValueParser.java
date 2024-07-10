@@ -6,7 +6,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class KeyValueParser {
-    private KeyValueParser() {};
+    private KeyValueParser() {}
 
     public static Map<String, String> parse(String body) {
         return parseQuertString(body);
@@ -27,7 +27,7 @@ public class KeyValueParser {
                     query.put(key, "");
                 }
             } catch (UnsupportedEncodingException e) {
-                new IllegalArgumentException("UTF-8을 지원하지 않습니다.");
+                throw new IllegalArgumentException("UTF-8을 지원하지 않습니다.");
             }
         }
         return query;

@@ -14,7 +14,7 @@ import org.slf4j.LoggerFactory;
 
 public class UserHandler {
     private static final Logger logger = LoggerFactory.getLogger(UserHandler.class);
-    private static SessionManager sessionManager = new SessionManager();
+    private static final SessionManager sessionManager = new SessionManager();
 
     private UserHandler() {}
 
