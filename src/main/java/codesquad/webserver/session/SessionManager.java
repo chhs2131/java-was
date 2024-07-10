@@ -9,6 +9,8 @@ import java.util.Map;
 import java.util.UUID;
 
 public class SessionManager {
+    private static final int SESSION_MAX_AGE = 3600;
+
     public Session getSession(String sessionId) {
         // TODO 없는 경우 throw?
         return SessionDatabase.getSession(sessionId).get();
@@ -20,7 +22,7 @@ public class SessionManager {
         Map<String, Object> attributes = new HashMap<>();
         attributes.put("user", user);
 
-        Session session = new Session(sessionId, LocalDateTime.MAX, attributes);
+        Session session = new Session(sessionId, LocalDateTime.now().plusSeconds(SESSION_MAX_AGE), attributes);
 
         // 디비에 추가
         SessionDatabase.addSession(session);
