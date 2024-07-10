@@ -17,8 +17,13 @@ public class SessionManager {
     }
 
     public boolean validSession(String sessionId) {
-        // TODO 세션 검증 로직 추가
-        return getSession(sessionId).isPresent();
+        Optional<Session> sessionOpt = getSession(sessionId);
+        if (sessionOpt.isEmpty()) {
+            return false;
+        }
+
+        Session session = sessionOpt.get();
+        return LocalDateTime.now().isBefore(session.expired());
     }
 
     public Session createSession(User user) {

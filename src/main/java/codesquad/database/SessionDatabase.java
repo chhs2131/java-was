@@ -30,4 +30,8 @@ public class SessionDatabase {
             sessionDb.remove(sessionId);
         }
     }
+
+    public static void clear() {
+        sessionDb.clear();
+    }
 }
