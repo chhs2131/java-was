@@ -15,7 +15,10 @@ public class SessionDatabase {
     }
 
     public static Optional<Session> getSession(String sessionId) {
-        return Optional.ofNullable(sessionDb.get(sessionId));
+        if (sessionDb.containsKey(sessionId)) {
+            return Optional.of(sessionDb.get(sessionId));
+        }
+        return Optional.empty();
     }
 
     public static boolean existsSession(String sessionId) {

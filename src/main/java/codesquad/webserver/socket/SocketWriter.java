@@ -11,10 +11,6 @@ public class SocketWriter {
         this.socket = socket;
     }
 
-    public void write(String message) {
-        write(message.getBytes());
-    }
-
     public void write(byte[] message) {
         try {
             OutputStream clientOutput = socket.getOutputStream();

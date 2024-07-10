@@ -58,6 +58,10 @@ public class UserHandler {
         final Cookie cookies = httpRequest.headers().getCookies();
         final String sid = cookies.get("SID");
 
+        if (!sessionManager.validSession(sid)) {
+            logger.debug("세션이 존재하지 않습니다. sid:{}", sid);
+            return new HttpResponse(HttpProtocol.HTTP_1_1, HttpStatus.UNAUTHORIZED, HttpHeader.createEmpty(), "세션이 존재하지 않습니다.");
+        }
         sessionManager.removeSession(sid);
         logger.debug("정상적으로 로그아웃하였습니다. sid:{}", sid);
 

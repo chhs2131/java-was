@@ -6,14 +6,19 @@ import codesquad.application.User;
 import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Optional;
 import java.util.UUID;
 
 public class SessionManager {
     private static final int SESSION_MAX_AGE = 3600;
 
-    public Session getSession(String sessionId) {
-        // TODO 없는 경우 throw?
-        return SessionDatabase.getSession(sessionId).get();
+    public Optional<Session> getSession(String sessionId) {
+        return SessionDatabase.getSession(sessionId);
+    }
+
+    public boolean validSession(String sessionId) {
+        // TODO 세션 검증 로직 추가
+        return getSession(sessionId).isPresent();
     }
 
     public Session createSession(User user) {
