@@ -22,7 +22,7 @@ public class HttpHeader{
     }
 
     public void add(String name, String value) {
-        if (!headers.containsKey(name) || headers.get(name) == null || headers.get(name).isEmpty()) {
+        if (existsHeader(name)) {
             set(name, value);
             return;
         }
@@ -30,8 +30,24 @@ public class HttpHeader{
         headers.get(name).add(value);
     }
 
-    public void addCookie(Cookie cookie) {
-        // TODO
+    /**
+     * Cookie의 값 전체를 Header에 추가합니다.
+     * @param cookie
+     */
+    public void setCookie(final Cookie cookie) {
+        final StringBuilder sb = new StringBuilder();
+
+        // TODO Cookie 클래스에서 관련 정보를 받기
+        List<String> list = List.of("SID", "Path", "Domain", "Max-Age", "Expires", "Secure", "HttpOnly", "SameSite");
+        list.stream()
+                .forEach(key -> {
+                    if (!cookie.contains(key)) {
+                        return;
+                    }
+                    sb.append(key + "=" + cookie.get(key) + ";");
+                });
+
+        headers.put("Set-Cookie", List.of(sb.toString()));
     }
 
     /**
@@ -82,6 +98,17 @@ public class HttpHeader{
         return Cookie.create(headers.get("Cookie"));
     }
 
+    public HttpHeader setLocation(String location) {
+        add("Location", location);
+        return this;
+    }
+
+    public static HttpHeader createRedirection(String location) {
+        final HttpHeader httpHeader = new HttpHeader();
+        httpHeader.setLocation(location);
+        return httpHeader;
+    }
+
     public static HttpHeader of(String name, String value) {
         final HttpHeader httpHeader = new HttpHeader();
         httpHeader.add(name, value);
@@ -97,5 +124,9 @@ public class HttpHeader{
 
     public static HttpHeader createEmpty() {
         return new HttpHeader();
+    }
+
+    private boolean existsHeader(String name) {
+        return !headers.containsKey(name) || headers.get(name) == null || headers.get(name).isEmpty();
     }
 }
