@@ -11,6 +11,7 @@ import codesquad.webserver.session.SessionManager;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.util.List;
 import java.util.Map;
 
 public class UserHandler {
@@ -52,11 +53,46 @@ public class UserHandler {
         return ContentType.from(extension).getMimeType();
     }
 
-
     // GET /user/list
     public static HttpResponse getUserList(HttpRequest httpRequest) {
-//        List<User> users = UserDatabase.findAll();
-        throw new UnsupportedOperationException();
+        final Cookie cookies = httpRequest.headers().getCookies();
+        final String sid = cookies.get("SID");
+
+        if (sid == null || !sessionManager.validSession(sid)) {
+            logger.debug("세션이 존재하지 않습니다. sid:{}", sid);
+            HttpHeader headers = HttpHeader.createRedirection("/user/login_failed.html");
+            return new HttpResponse(HttpProtocol.HTTP_1_1, HttpStatus.FOUND, headers, null);
+        }
+
+        // HTML 값 생성
+        List<User> users = UserDatabase.findAll();
+        StringBuilder sb = new StringBuilder();
+        users.forEach(user -> {
+            sb.append("<tr>");
+            sb.append("<td>");
+            sb.append(user.getName());
+            sb.append("</td>");
+            sb.append("<td>");
+            sb.append(user.getEmail());
+            sb.append("</td>");
+            sb.append("<td>");
+            sb.append(user.getNickname());
+            sb.append("</td>");
+            sb.append("</tr>");
+        });
+
+        // HTML 페이지 불러오기
+        String resourcePath = "/user/list.html";
+
+        String mimeType = getMimeType(resourcePath);
+        HttpHeader headers = new HttpHeader();
+        headers.add("Content-Type", mimeType);
+
+        String s = SimpleTemplateEngine.readTemplate(resourcePath);
+        String templateHtml = SimpleTemplateEngine.processTemplate(s, Map.of("holder", sb.toString()));
+        logger.debug("동적 페이지를 반환합니다.");
+
+        return new HttpResponse(HttpProtocol.HTTP_1_1, HttpStatus.OK, headers, templateHtml);
     }
 
     // POST /user/create

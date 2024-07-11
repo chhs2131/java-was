@@ -21,7 +21,9 @@ public class DynamicRequestHandler implements RouterHandler {
         mapping.put(new HandlerPath(HttpMethod.POST, "/user/create"), UserHandler::createUser);
         mapping.put(new HandlerPath(HttpMethod.POST, "/user/login"), UserHandler::login);
         mapping.put(new HandlerPath(HttpMethod.POST, "/user/logout"), UserHandler::logout);
+        mapping.put(new HandlerPath(HttpMethod.GET, "/user/list"), UserHandler::getUserList);
         mapping.put(new HandlerPath(HttpMethod.GET, "/index.html"), UserHandler::getHomepage);
+        mapping.put(new HandlerPath(HttpMethod.GET, "/"), UserHandler::getHomepage);
     }
 
     @Override

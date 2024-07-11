@@ -1,0 +1,38 @@
+/* 테이블 스타일 */
+table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 20px 0;
+    font-size: 18px;
+    text-align: left;
+}
+
+table thead th {
+    background-color: #f2f2f2;
+    padding: 10px;
+    border-bottom: 2px solid #ddd;
+}
+
+table tbody tr:nth-child(even) {
+    background-color: #f9f9f9;
+}
+
+table tbody tr:hover {
+    background-color: #f1f1f1;
+}
+
+table tbody td {
+    padding: 10px;
+    border-bottom: 1px solid #ddd;
+}
+
+/* 컨테이너 스타일 */
+.container {
+    padding: 20px;
+}
+
+/* 페이지 타이틀 스타일 */
+.page-title {
+    font-size: 24px;
+    margin-bottom: 20px;
+}

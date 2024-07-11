@@ -20,7 +20,6 @@ public class StaticRequestHandler implements RouterHandler {
     private static final Map<String, String> mapping = new HashMap<>();
     static {
         // 외부에서 전달받도록 수정 필요
-        mapping.put("/", "/index.html");
         mapping.put("/registration", "/registration/index.html");
         mapping.put("/login", "/login/index.html");
     }
