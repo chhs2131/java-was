@@ -27,4 +27,8 @@ public class UserDatabase {
                 .findFirst()
                 .orElseThrow(IllegalArgumentException::new);
     }
+
+    public static void clear() {
+        userDb.clear();
+    }
 }
