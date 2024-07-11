@@ -1,22 +1,63 @@
 package codesquad.application;
 
 import codesquad.database.UserDatabase;
+import codesquad.util.StringUtil;
+import codesquad.webserver.handler.SimpleTemplateEngine;
 import codesquad.webserver.http.HttpRequest;
 import codesquad.webserver.http.HttpResponse;
-import codesquad.webserver.http.type.Cookie;
-import codesquad.webserver.http.type.HttpHeader;
-import codesquad.webserver.http.type.HttpProtocol;
-import codesquad.webserver.http.type.HttpStatus;
+import codesquad.webserver.http.type.*;
 import codesquad.webserver.session.Session;
 import codesquad.webserver.session.SessionManager;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import java.util.Map;
 
 public class UserHandler {
     private static final Logger logger = LoggerFactory.getLogger(UserHandler.class);
     private static final SessionManager sessionManager = new SessionManager();
 
     private UserHandler() {}
+
+    // GET /
+    public static HttpResponse getHomepage(HttpRequest httpRequest) {
+        final Cookie cookies = httpRequest.headers().getCookies();
+        final String sid = cookies.get("SID");
+
+        String holderValue = "";
+        if (sid == null || !sessionManager.validSession(sid)) {
+            logger.debug("세션이 존재하지 않습니다. sid:{}", sid);
+            holderValue = "<a class=\"btn btn_contained btn_size_s\" href=\"/login\">로그인</a>";
+        } else {
+            User user = (User) sessionManager.getSession(sid).get().attributes().get("user");
+            holderValue = user.getName() + "님 환영합니다.";
+        }
+
+        // TODO StaticHandler와 코드가 중복됨
+        String resourcePath = "/index.html";
+        String mimeType = getMimeType(resourcePath);
+
+        HttpHeader headers = new HttpHeader();
+        headers.add("Content-Type", mimeType);
+
+        String s = SimpleTemplateEngine.readTemplate(resourcePath);
+        String templateHtml = SimpleTemplateEngine.processTemplate(s, Map.of("holder", holderValue));
+        logger.debug("동적 페이지를 반환합니다.");
+
+        return new HttpResponse(HttpProtocol.HTTP_1_1, HttpStatus.OK, headers, templateHtml);
+    }
+
+    protected static String getMimeType(String staticFilePath) {
+        String extension = StringUtil.getExtension(staticFilePath);
+        return ContentType.from(extension).getMimeType();
+    }
+
+
+    // GET /user/list
+    public static HttpResponse getUserList(HttpRequest httpRequest) {
+//        List<User> users = UserDatabase.findAll();
+        throw new UnsupportedOperationException();
+    }
 
     // POST /user/create
     public static HttpResponse createUser(HttpRequest httpRequest) {
