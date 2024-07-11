@@ -3,6 +3,7 @@ package codesquad.application;
 import static org.junit.jupiter.api.Assertions.*;
 
 import codesquad.database.UserDatabase;
+import codesquad.webserver.authentication.AuthenticationHolder;
 import codesquad.webserver.http.HttpRequest;
 import codesquad.webserver.http.HttpResponse;
 import codesquad.webserver.http.type.HttpHeader;
@@ -13,10 +14,17 @@ import codesquad.webserver.session.Session;
 import codesquad.webserver.session.SessionManager;
 import java.util.HashMap;
 import java.util.Map;
+
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
 class UserHandlerTest {
+    @BeforeEach
+    public void setUp() {
+        AuthenticationHolder.clear();
+    }
+
     @Test
     @DisplayName("유저 생성 요청을 성공적으로 수행한다.")
     public void test_create_user_success() {
@@ -88,6 +96,7 @@ class UserHandlerTest {
         final SessionManager sessionManager = new SessionManager();
         final Session session = sessionManager.createSession(user);
         String sessionId = session.id();
+        AuthenticationHolder.setContext(user);
 
         final HttpHeader cookie = HttpHeader.of("Cookie", "SID=" + sessionId);
         HttpRequest httpRequest = new HttpRequest(HttpMethod.GET, "/user/logout", new HashMap<>(), HttpProtocol.HTTP_1_1, cookie, new HashMap<>());

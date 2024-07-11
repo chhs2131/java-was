@@ -2,6 +2,7 @@ package codesquad.application;
 
 import codesquad.database.UserDatabase;
 import codesquad.util.StringUtil;
+import codesquad.webserver.authentication.AuthenticationHolder;
 import codesquad.webserver.handler.SimpleTemplateEngine;
 import codesquad.webserver.http.HttpRequest;
 import codesquad.webserver.http.HttpResponse;
@@ -25,12 +26,12 @@ public class UserHandler {
         final Cookie cookies = httpRequest.headers().getCookies();
         final String sid = cookies.get("SID");
 
+        User user = AuthenticationHolder.getContext();
         String holderValue = "";
-        if (sid == null || !sessionManager.validSession(sid)) {
+        if (user == null) {
             logger.debug("세션이 존재하지 않습니다. sid:{}", sid);
             holderValue = "<a class=\"btn btn_contained btn_size_s\" href=\"/login\">로그인</a>";
         } else {
-            User user = (User) sessionManager.getSession(sid).get().attributes().get("user");
             holderValue = user.getName() + "님 환영합니다.";
         }
 
@@ -58,7 +59,8 @@ public class UserHandler {
         final Cookie cookies = httpRequest.headers().getCookies();
         final String sid = cookies.get("SID");
 
-        if (sid == null || !sessionManager.validSession(sid)) {
+        User context = AuthenticationHolder.getContext();
+        if (context == null) {
             logger.debug("세션이 존재하지 않습니다. sid:{}", sid);
             HttpHeader headers = HttpHeader.createRedirection("/user/login_failed.html");
             return new HttpResponse(HttpProtocol.HTTP_1_1, HttpStatus.FOUND, headers, null);
@@ -117,7 +119,7 @@ public class UserHandler {
 
         try {
             User user = UserDatabase.getUserByIdAndPassword(name, password);
-            Session session = sessionManager.createSession(user);
+            Session session = sessionManager.createSession(user);  // TODO SessionManager 제거
 
             HttpHeader headers = HttpHeader.createRedirection("/main/index.html");
             headers.setCookie(Cookie.from(session));
@@ -135,11 +137,13 @@ public class UserHandler {
         final Cookie cookies = httpRequest.headers().getCookies();
         final String sid = cookies.get("SID");
 
-        if (!sessionManager.validSession(sid)) {
+        User context = AuthenticationHolder.getContext();
+        if (context == null) {
             logger.debug("세션이 존재하지 않습니다. sid:{}", sid);
             return new HttpResponse(HttpProtocol.HTTP_1_1, HttpStatus.UNAUTHORIZED, HttpHeader.createEmpty(), "세션이 존재하지 않습니다.");
         }
-        sessionManager.removeSession(sid);
+
+        sessionManager.removeSession(sid);  // TODO SessionManager 제거?
         logger.debug("정상적으로 로그아웃하였습니다. sid:{}", sid);
 
         HttpHeader headers = HttpHeader.createRedirection("/index.html");
