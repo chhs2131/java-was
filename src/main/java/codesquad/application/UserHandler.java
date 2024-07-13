@@ -1,7 +1,7 @@
 package codesquad.application;
 
 import codesquad.database.UserDatabase;
-import codesquad.util.StringUtil;
+import codesquad.webserver.util.StringUtil;
 import codesquad.webserver.authentication.AuthenticationHolder;
 import codesquad.webserver.handler.SimpleTemplateEngine;
 import codesquad.webserver.http.HttpRequest;
