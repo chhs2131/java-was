@@ -6,7 +6,7 @@ import codesquad.webserver.http.type.ContentType;
 import codesquad.webserver.http.type.HttpHeader;
 import codesquad.webserver.http.type.HttpProtocol;
 import codesquad.webserver.http.type.HttpStatus;
-import codesquad.util.StringUtil;
+import codesquad.webserver.util.StringUtil;
 import codesquad.webserver.StaticFileReader;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
