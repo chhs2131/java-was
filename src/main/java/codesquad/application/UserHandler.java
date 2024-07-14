@@ -3,7 +3,8 @@ package codesquad.application;
 import static codesquad.webserver.file.FileHttpResponseCreator.create;
 
 import codesquad.database.UserDatabase;
-import codesquad.webserver.util.StringUtil;
+import codesquad.webserver.annotation.Controller;
+import codesquad.webserver.annotation.RequestMapping;
 import codesquad.webserver.authentication.AuthenticationHolder;
 import codesquad.webserver.http.HttpRequest;
 import codesquad.webserver.http.HttpResponse;
@@ -14,12 +15,13 @@ import org.slf4j.LoggerFactory;
 import java.util.List;
 import java.util.Map;
 
+@Controller
 public class UserHandler {
     private static final Logger logger = LoggerFactory.getLogger(UserHandler.class);
 
     private UserHandler() {}
 
-    // GET /
+    @RequestMapping(method = HttpMethod.GET, path = "/")
     public static HttpResponse getHomepage(HttpRequest httpRequest) {
         final Cookie cookies = httpRequest.headers().getCookies();
         final String sid = cookies.get("SID");
@@ -37,12 +39,7 @@ public class UserHandler {
         return create(resourcePath, Map.of("holder", holderValue));
     }
 
-    protected static String getMimeType(String staticFilePath) {
-        String extension = StringUtil.getExtension(staticFilePath);
-        return ContentType.from(extension).getMimeType();
-    }
-
-    // GET /user/list
+    @RequestMapping(method = HttpMethod.GET, path = "/user/list")
     public static HttpResponse getUserList(HttpRequest httpRequest) {
         final Cookie cookies = httpRequest.headers().getCookies();
         final String sid = cookies.get("SID");
@@ -69,7 +66,7 @@ public class UserHandler {
         return create(resourcePath, Map.of("holder", sb.toString()));
     }
 
-    // POST /user/create
+    @RequestMapping(method = HttpMethod.GET, path = "/user/create")
     public static HttpResponse createUser(HttpRequest httpRequest) {
         String name = httpRequest.body().get("name");
         String password = httpRequest.body().get("password");

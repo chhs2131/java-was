@@ -1,11 +1,14 @@
 package codesquad.application;
 
 import codesquad.database.UserDatabase;
+import codesquad.webserver.annotation.RequestMapping;
 import codesquad.webserver.authentication.AuthenticationHolder;
+import codesquad.webserver.annotation.Controller;
 import codesquad.webserver.http.HttpRequest;
 import codesquad.webserver.http.HttpResponse;
 import codesquad.webserver.http.type.Cookie;
 import codesquad.webserver.http.type.HttpHeader;
+import codesquad.webserver.http.type.HttpMethod;
 import codesquad.webserver.http.type.HttpProtocol;
 import codesquad.webserver.http.type.HttpStatus;
 import codesquad.webserver.session.Session;
@@ -13,13 +16,14 @@ import codesquad.webserver.session.SessionManager;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+@Controller
 public class LoginHandler {
     private static final Logger logger = LoggerFactory.getLogger(LoginHandler.class);
     private static final SessionManager sessionManager = new SessionManager();
 
     private LoginHandler() {}
 
-    // POST /user/login
+    @RequestMapping(method = HttpMethod.POST, path = "/user/login")
     public static HttpResponse login(HttpRequest httpRequest) {
         String name = httpRequest.body().get("username");
         String password = httpRequest.body().get("password");
@@ -38,7 +42,7 @@ public class LoginHandler {
         }
     }
 
-    // POST /user/logout
+    @RequestMapping(method = HttpMethod.POST, path = "/user/logout")
     public static HttpResponse logout(HttpRequest httpRequest) {
         final Cookie cookies = httpRequest.headers().getCookies();
         final String sid = cookies.get("SID");
