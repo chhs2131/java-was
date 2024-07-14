@@ -2,10 +2,7 @@ package codesquad.webserver.handler;
 
 import codesquad.webserver.http.HttpRequest;
 import codesquad.webserver.http.HttpResponse;
-import codesquad.webserver.http.type.ContentType;
-import codesquad.webserver.http.type.HttpHeader;
 import codesquad.webserver.util.StringUtil;
-import codesquad.webserver.file.StaticFileReader;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -14,7 +11,6 @@ import java.util.Map;
 
 public class StaticRequestHandler implements RouterHandler {
     protected static final Logger logger = LoggerFactory.getLogger(StaticRequestHandler.class);
-    protected final StaticFileReader staticFileReader = new StaticFileReader();
     private static final Map<String, String> mapping = new HashMap<>();
     static {
         // 외부에서 전달받도록 수정 필요
@@ -40,15 +36,8 @@ public class StaticRequestHandler implements RouterHandler {
             return HttpResponse.badRequest("잘못된 요청입니다. Path: " + resourcePath);
         }
 
-        String mimeType = getMimeType(resourcePath);
-
-        String fileData = "";
-        HttpHeader headers = new HttpHeader();
-        headers.add("Content-Type", mimeType);
-
         try {
-            fileData = getStaticFile(resourcePath);
-            return HttpResponse.ok(headers, fileData);
+            return FileHttpResponseCreator.create(resourcePath);
         } catch (Exception e) {
             logger.debug("HTTP NotFound Exception. {}", resourcePath);
             return HttpResponse.notFound("파일을 찾을 수 없습니다. Path: " + resourcePath);
@@ -65,14 +54,5 @@ public class StaticRequestHandler implements RouterHandler {
     private boolean isStaticRequest(String resourcePath) {
         String extension = StringUtil.getExtension(resourcePath);
         return extension != null && !extension.isEmpty();
-    }
-
-    protected String getMimeType(String staticFilePath) {
-        String extension = StringUtil.getExtension(staticFilePath);
-        return ContentType.from(extension).getMimeType();
-    }
-
-    protected String getStaticFile(String path) {
-        return staticFileReader.read(path);
     }
 }

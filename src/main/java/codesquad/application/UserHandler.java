@@ -1,9 +1,10 @@
 package codesquad.application;
 
+import static codesquad.webserver.handler.FileHttpResponseCreator.create;
+
 import codesquad.database.UserDatabase;
 import codesquad.webserver.util.StringUtil;
 import codesquad.webserver.authentication.AuthenticationHolder;
-import codesquad.webserver.handler.SimpleTemplateEngine;
 import codesquad.webserver.http.HttpRequest;
 import codesquad.webserver.http.HttpResponse;
 import codesquad.webserver.http.type.*;
@@ -32,18 +33,8 @@ public class UserHandler {
             holderValue = user.getName() + "님 환영합니다.";
         }
 
-        // TODO StaticHandler와 코드가 중복됨
         String resourcePath = "/index.html";
-        String mimeType = getMimeType(resourcePath);
-
-        HttpHeader headers = new HttpHeader();
-        headers.add("Content-Type", mimeType);
-
-        String s = SimpleTemplateEngine.readTemplate(resourcePath);
-        String templateHtml = SimpleTemplateEngine.processTemplate(s, Map.of("holder", holderValue));
-        logger.debug("동적 페이지를 반환합니다.");
-
-        return HttpResponse.ok(headers, templateHtml);
+        return create(resourcePath, Map.of("holder", holderValue));
     }
 
     protected static String getMimeType(String staticFilePath) {
@@ -75,16 +66,7 @@ public class UserHandler {
 
         // HTML 페이지 불러오기
         String resourcePath = "/user/list.html";
-
-        String mimeType = getMimeType(resourcePath);
-        HttpHeader headers = new HttpHeader();
-        headers.add("Content-Type", mimeType);
-
-        String s = SimpleTemplateEngine.readTemplate(resourcePath);
-        String templateHtml = SimpleTemplateEngine.processTemplate(s, Map.of("holder", sb.toString()));
-        logger.debug("동적 페이지를 반환합니다.");
-
-        return HttpResponse.ok(headers, templateHtml);
+        return create(resourcePath, Map.of("holder", sb.toString()));
     }
 
     // POST /user/create
