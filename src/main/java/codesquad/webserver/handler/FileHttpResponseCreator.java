@@ -33,7 +33,7 @@ public class FileHttpResponseCreator {
 
         // TODO TemplateEngine을 인터페이스로 두고 사용자가 이를 선택할 수 있도록 수정
         String fileData = getStaticFile(resourcePath);
-        String templateHtml = SimpleTemplateEngine.processTemplate(fileData, templateData);
+        String templateHtml = SimpleTemplateEngine.render(fileData, templateData);
         return HttpResponse.ok(headers, templateHtml);
     }
 

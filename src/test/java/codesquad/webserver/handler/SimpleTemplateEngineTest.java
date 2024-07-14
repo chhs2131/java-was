@@ -5,7 +5,7 @@ import org.junit.jupiter.api.Test;
 
 import java.util.Map;
 
-import static codesquad.webserver.handler.SimpleTemplateEngine.processTemplate;
+import static codesquad.webserver.handler.SimpleTemplateEngine.render;
 import static org.assertj.core.api.Assertions.*;
 
 class SimpleTemplateEngineTest {
@@ -21,7 +21,7 @@ class SimpleTemplateEngineTest {
                 "body", "This is a test."
         );
 
-        String result = processTemplate(template, value);
+        String result = render(template, value);
 
         assertThat(result).isEqualTo("<html><head><title>Test Page</title></head><body><h1>Hello, World!</h1><p>This is a test.</p></body></html>");
     }
@@ -36,7 +36,7 @@ class SimpleTemplateEngineTest {
                 // "body" key is missing
         );
 
-        String result = processTemplate(template, value);
+        String result = render(template, value);
 
         assertThat(result).isEqualTo("<html><head><title>Test Page</title></head><body><h1>Hello, World!</h1><p>${body}</p></body></html>");
     }
@@ -47,7 +47,7 @@ class SimpleTemplateEngineTest {
         // 모든 플레이스홀더에 값이 없는 경우
         Map<String, String> value = Map.of();
 
-        String result = processTemplate(template, value);
+        String result = render(template, value);
 
         assertThat(result).isEqualTo("<html><head><title>${title}</title></head><body><h1>${header}</h1><p>${body}</p></body></html>");
     }
@@ -57,7 +57,7 @@ class SimpleTemplateEngineTest {
     public void test_template_engine_cant_place_success() {
         Map<String, String> value = Map.of("hello", "world");
 
-        String result = processTemplate(template, value);
+        String result = render(template, value);
 
         assertThat(result).isEqualTo("<html><head><title>${title}</title></head><body><h1>${header}</h1><p>${body}</p></body></html>");
     }
