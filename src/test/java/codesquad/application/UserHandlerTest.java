@@ -21,6 +21,7 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
 class UserHandlerTest {
+    private UserHandler userHandler = new UserHandler();
     private SessionManager sessionManager;
     private User testUser;
 
@@ -44,7 +45,7 @@ class UserHandlerTest {
         requestBody.put("email", "test@example.com");
         HttpRequest httpRequest = new HttpRequest(HttpMethod.POST, "/user/create", new HashMap<>(), HttpProtocol.HTTP_1_1, HttpHeader.createEmpty(), requestBody);
 
-        HttpResponse response = UserHandler.createUser(httpRequest);
+        HttpResponse response = userHandler.createUser(httpRequest);
 
         assertEquals(HttpStatus.FOUND, response.status());
         assertEquals("/index.html", response.headers().get("Location"));
@@ -58,7 +59,7 @@ class UserHandlerTest {
         requestBody.put("name", "testUser");  // password, nickname, email fields 없음
         HttpRequest httpRequest = new HttpRequest(HttpMethod.POST, "/user/create", new HashMap<>(), HttpProtocol.HTTP_1_1, HttpHeader.createEmpty(), requestBody);
 
-        HttpResponse response = UserHandler.createUser(httpRequest);
+        HttpResponse response = userHandler.createUser(httpRequest);
 
         assertEquals(HttpStatus.FOUND, response.status());
     }
@@ -67,7 +68,7 @@ class UserHandlerTest {
     void testGetHomepage() {
         HttpRequest httpRequest = new HttpRequest(HttpMethod.GET, "/", new HashMap<>(), HttpProtocol.HTTP_1_1, HttpHeader.createEmpty(), new HashMap<>());
 
-        HttpResponse response = UserHandler.getHomepage(httpRequest);
+        HttpResponse response = userHandler.getHomepage(httpRequest);
 
         assertEquals(HttpStatus.OK, response.status());
         assertTrue(response.body().contains("로그인"));
@@ -88,7 +89,7 @@ class UserHandlerTest {
 
         HttpRequest httpRequest = new HttpRequest(HttpMethod.GET, "/", headers, HttpProtocol.HTTP_1_1, HttpHeader.createEmpty(), new HashMap<>());
 
-        HttpResponse response = UserHandler.getHomepage(httpRequest);
+        HttpResponse response = userHandler.getHomepage(httpRequest);
 
         assertEquals(HttpStatus.OK, response.status());
         assertTrue(response.body().contains(testUser.getName() + "님 환영합니다."));
@@ -109,7 +110,7 @@ class UserHandlerTest {
 
         HttpRequest httpRequest = new HttpRequest(HttpMethod.GET, "/user/list", headers, HttpProtocol.HTTP_1_1, HttpHeader.createEmpty(), new HashMap<>());
 
-        HttpResponse response = UserHandler.getUserList(httpRequest);
+        HttpResponse response = userHandler.getUserList(httpRequest);
 
         assertEquals(HttpStatus.OK, response.status());
         assertTrue(response.body().contains(testUser.getName()));
@@ -122,7 +123,7 @@ class UserHandlerTest {
     void testGetUserListWithoutLogin() {
         HttpRequest httpRequest = new HttpRequest(HttpMethod.GET, "/user/list", new HashMap<>(), HttpProtocol.HTTP_1_1, HttpHeader.createEmpty(), new HashMap<>());
 
-        HttpResponse response = UserHandler.getUserList(httpRequest);
+        HttpResponse response = userHandler.getUserList(httpRequest);
 
         assertEquals(HttpStatus.FOUND, response.status());
         assertEquals("/user/login_failed.html", response.headers().get("Location"));

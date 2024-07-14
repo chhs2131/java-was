@@ -21,10 +21,8 @@ public class LoginHandler {
     private static final Logger logger = LoggerFactory.getLogger(LoginHandler.class);
     private static final SessionManager sessionManager = new SessionManager();
 
-    private LoginHandler() {}
-
     @RequestMapping(method = HttpMethod.POST, path = "/user/login")
-    public static HttpResponse login(HttpRequest httpRequest) {
+    public HttpResponse login(HttpRequest httpRequest) {
         String name = httpRequest.body().get("username");
         String password = httpRequest.body().get("password");
 
@@ -43,7 +41,7 @@ public class LoginHandler {
     }
 
     @RequestMapping(method = HttpMethod.POST, path = "/user/logout")
-    public static HttpResponse logout(HttpRequest httpRequest) {
+    public HttpResponse logout(HttpRequest httpRequest) {
         final Cookie cookies = httpRequest.headers().getCookies();
         final String sid = cookies.get("SID");
 

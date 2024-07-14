@@ -20,6 +20,8 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
 class LoginHandlerTest {
+    private LoginHandler loginHandler = new LoginHandler();
+
     @BeforeEach
     public void setUp() {
         UserDatabase.clear();
@@ -37,7 +39,7 @@ class LoginHandlerTest {
         requestBody.put("password", "testPass");
         HttpRequest httpRequest = new HttpRequest(HttpMethod.POST, "/user/login", new HashMap<>(), HttpProtocol.HTTP_1_1, HttpHeader.createEmpty(), requestBody);
 
-        HttpResponse response = LoginHandler.login(httpRequest);
+        HttpResponse response = loginHandler.login(httpRequest);
 
         assertEquals(HttpStatus.FOUND, response.status());
         assertEquals("/main/index.html", response.headers().get("Location"));
@@ -53,7 +55,7 @@ class LoginHandlerTest {
         requestBody.put("password", "wrongPass");
         HttpRequest httpRequest = new HttpRequest(HttpMethod.POST, "/user/login", new HashMap<>(), HttpProtocol.HTTP_1_1, HttpHeader.createEmpty(), requestBody);
 
-        HttpResponse response = LoginHandler.login(httpRequest);
+        HttpResponse response = loginHandler.login(httpRequest);
 
         assertEquals(HttpStatus.FOUND, response.status());
         assertEquals("/user/login_failed.html", response.headers().get("Location"));
@@ -74,7 +76,7 @@ class LoginHandlerTest {
         final HttpHeader cookie = HttpHeader.of("Cookie", "SID=" + sessionId);
         HttpRequest httpRequest = new HttpRequest(HttpMethod.GET, "/user/logout", new HashMap<>(), HttpProtocol.HTTP_1_1, cookie, new HashMap<>());
 
-        HttpResponse response = LoginHandler.logout(httpRequest);
+        HttpResponse response = loginHandler.logout(httpRequest);
 
         assertEquals(HttpStatus.FOUND, response.status());
         assertEquals("/index.html", response.headers().get("Location"));
@@ -98,7 +100,7 @@ class LoginHandlerTest {
         final HttpHeader cookie = HttpHeader.of("Cookie", "SID=" + sessionId);
         HttpRequest httpRequest = new HttpRequest(HttpMethod.GET, "/user/logout", new HashMap<>(), HttpProtocol.HTTP_1_1, cookie, new HashMap<>());
 
-        HttpResponse response = LoginHandler.logout(httpRequest);
+        HttpResponse response = loginHandler.logout(httpRequest);
 
         assertEquals(HttpStatus.UNAUTHORIZED, response.status());
         assertEquals("세션이 존재하지 않습니다.", response.body());
@@ -114,7 +116,7 @@ class LoginHandlerTest {
         final HttpHeader cookie = HttpHeader.of("Cookie", "SID=" + invalidSessionId);
         HttpRequest httpRequest = new HttpRequest(HttpMethod.GET, "/user/logout", new HashMap<>(), HttpProtocol.HTTP_1_1, cookie, new HashMap<>());
 
-        HttpResponse response = LoginHandler.logout(httpRequest);
+        HttpResponse response = loginHandler.logout(httpRequest);
 
         assertEquals(HttpStatus.UNAUTHORIZED, response.status());
         assertEquals("세션이 존재하지 않습니다.", response.body());

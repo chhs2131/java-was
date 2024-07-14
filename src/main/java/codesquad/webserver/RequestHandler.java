@@ -1,5 +1,9 @@
 package codesquad.webserver;
 
+import codesquad.application.AnnotationScanner;
+import codesquad.application.HtmlPageHandler;
+import codesquad.application.LoginHandler;
+import codesquad.application.UserHandler;
 import codesquad.webserver.http.HttpRequest;
 import codesquad.webserver.http.HttpResponse;
 import codesquad.webserver.handler.*;
@@ -13,7 +17,18 @@ import java.util.List;
 public class RequestHandler {
     private static final List<RouterHandler> handlers = new ArrayList<>();
     static {
-        handlers.add(new DynamicRequestHandler());
+        List<Class<?>> controllers = List.of(
+            LoginHandler.class,
+            UserHandler.class,
+            HtmlPageHandler.class
+        );
+
+        handlers.add(
+            new DynamicRequestHandler(
+                new AnnotationScanner().getRequestMap(controllers),
+                new AnnotationScanner().getComponents(controllers)
+            )
+        );
         handlers.add(new StaticRequestHandler());
     }
 

@@ -19,10 +19,8 @@ import java.util.Map;
 public class UserHandler {
     private static final Logger logger = LoggerFactory.getLogger(UserHandler.class);
 
-    private UserHandler() {}
-
     @RequestMapping(method = HttpMethod.GET, path = "/")
-    public static HttpResponse getHomepage(HttpRequest httpRequest) {
+    public HttpResponse getHomepage(HttpRequest httpRequest) {
         final Cookie cookies = httpRequest.headers().getCookies();
         final String sid = cookies.get("SID");
 
@@ -40,7 +38,7 @@ public class UserHandler {
     }
 
     @RequestMapping(method = HttpMethod.GET, path = "/user/list")
-    public static HttpResponse getUserList(HttpRequest httpRequest) {
+    public HttpResponse getUserList(HttpRequest httpRequest) {
         final Cookie cookies = httpRequest.headers().getCookies();
         final String sid = cookies.get("SID");
 
@@ -66,8 +64,8 @@ public class UserHandler {
         return create(resourcePath, Map.of("holder", sb.toString()));
     }
 
-    @RequestMapping(method = HttpMethod.GET, path = "/user/create")
-    public static HttpResponse createUser(HttpRequest httpRequest) {
+    @RequestMapping(method = HttpMethod.POST, path = "/user/create")
+    public HttpResponse createUser(HttpRequest httpRequest) {
         String name = httpRequest.body().get("name");
         String password = httpRequest.body().get("password");
         String nickname = httpRequest.body().get("nickname");

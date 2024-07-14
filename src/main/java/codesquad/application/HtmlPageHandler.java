@@ -10,15 +10,13 @@ import codesquad.webserver.http.type.HttpMethod;
 
 @Controller
 public class HtmlPageHandler {
-    private HtmlPageHandler() {}
-
     @RequestMapping(method = HttpMethod.GET, path = "/registration")
-    public static HttpResponse getRegistrationPage(HttpRequest httpRequest) {
+    public HttpResponse getRegistrationPage(HttpRequest httpRequest) {
         return create("/registration/index.html");
     }
 
     @RequestMapping(method = HttpMethod.GET, path = "/login")
-    public static HttpResponse getLoginPage(HttpRequest httpRequest) {
+    public HttpResponse getLoginPage(HttpRequest httpRequest) {
         return create("/login/index.html");
     }
 }
