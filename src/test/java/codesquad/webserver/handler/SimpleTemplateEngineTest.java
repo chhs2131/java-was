@@ -5,7 +5,7 @@ import org.junit.jupiter.api.Test;
 
 import java.util.Map;
 
-import static codesquad.webserver.handler.SimpleTemplateEngine.render;
+import static codesquad.webserver.file.SimpleTemplateEngine.render;
 import static org.assertj.core.api.Assertions.*;
 
 class SimpleTemplateEngineTest {

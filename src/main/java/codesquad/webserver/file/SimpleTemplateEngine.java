@@ -1,4 +1,4 @@
-package codesquad.webserver.handler;
+package codesquad.webserver.file;
 
 import java.util.Map;
 

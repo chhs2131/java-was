@@ -1,6 +1,6 @@
 package codesquad.application;
 
-import static codesquad.webserver.handler.FileHttpResponseCreator.create;
+import static codesquad.webserver.file.FileHttpResponseCreator.create;
 
 import codesquad.database.UserDatabase;
 import codesquad.webserver.util.StringUtil;

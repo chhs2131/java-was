@@ -1,5 +1,6 @@
 package codesquad.webserver.handler;
 
+import codesquad.webserver.file.FileHttpResponseCreator;
 import codesquad.webserver.http.HttpRequest;
 import codesquad.webserver.http.HttpResponse;
 import codesquad.webserver.util.StringUtil;
