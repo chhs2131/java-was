@@ -10,4 +10,28 @@ public record HttpResponse(
         HttpHeader headers,
         String body
 ) {
+    public static HttpResponse ok(HttpHeader headers, String body) {
+        return new HttpResponse(HttpProtocol.HTTP_1_1, HttpStatus.OK, headers, body);
+    }
+
+    public static HttpResponse notFound(String body) {
+        return new HttpResponse(HttpProtocol.HTTP_1_1, HttpStatus.NOT_FOUND, HttpHeader.createEmpty(), body);
+    }
+
+    public static HttpResponse badRequest(String body) {
+        return new HttpResponse(HttpProtocol.HTTP_1_1, HttpStatus.BAD_REQUEST, HttpHeader.createEmpty(), body);
+    }
+
+    public static HttpResponse found(String redirectLocation, String body) {
+        HttpHeader headers = HttpHeader.createRedirection(redirectLocation);
+        return new HttpResponse(HttpProtocol.HTTP_1_1, HttpStatus.FOUND, headers, body);
+    }
+
+    public static HttpResponse unauthorized(String body) {
+        return new HttpResponse(HttpProtocol.HTTP_1_1, HttpStatus.UNAUTHORIZED, HttpHeader.createEmpty(), body);
+    }
+
+    public static HttpResponse internalServerError(String body) {
+        return new HttpResponse(HttpProtocol.HTTP_1_1, HttpStatus.INTERNAL_SERVER_ERROR, HttpHeader.createEmpty(), body);
+    }
 }

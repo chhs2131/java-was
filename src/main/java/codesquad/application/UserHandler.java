@@ -43,7 +43,7 @@ public class UserHandler {
         String templateHtml = SimpleTemplateEngine.processTemplate(s, Map.of("holder", holderValue));
         logger.debug("동적 페이지를 반환합니다.");
 
-        return new HttpResponse(HttpProtocol.HTTP_1_1, HttpStatus.OK, headers, templateHtml);
+        return HttpResponse.ok(headers, templateHtml);
     }
 
     protected static String getMimeType(String staticFilePath) {
@@ -59,8 +59,7 @@ public class UserHandler {
         User context = AuthenticationHolder.getContext();
         if (context == null) {
             logger.debug("세션이 존재하지 않습니다. sid:{}", sid);
-            HttpHeader headers = HttpHeader.createRedirection("/user/login_failed.html");
-            return new HttpResponse(HttpProtocol.HTTP_1_1, HttpStatus.FOUND, headers, null);
+            return HttpResponse.found("/user/login_failed.html", null);
         }
 
         // HTML 값 생성
@@ -85,7 +84,7 @@ public class UserHandler {
         String templateHtml = SimpleTemplateEngine.processTemplate(s, Map.of("holder", sb.toString()));
         logger.debug("동적 페이지를 반환합니다.");
 
-        return new HttpResponse(HttpProtocol.HTTP_1_1, HttpStatus.OK, headers, templateHtml);
+        return HttpResponse.ok(headers, templateHtml);
     }
 
     // POST /user/create
@@ -98,8 +97,6 @@ public class UserHandler {
         final User user = new User(name, password, nickname, email);
         UserDatabase.addUser(user);
         logger.debug("회원가입을 완료했습니다. {}", user);
-
-        HttpHeader headers = HttpHeader.createRedirection("/index.html");
-        return new HttpResponse(HttpProtocol.HTTP_1_1, HttpStatus.FOUND, headers, "유저가 생성되었습니다.");
+        return HttpResponse.found("/index.html", "유저가 생성되었습니다.");
     }
 }

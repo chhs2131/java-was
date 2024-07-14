@@ -1,6 +1,6 @@
 package codesquad.webserver.handler;
 
-import codesquad.webserver.StaticFileReader;
+import codesquad.webserver.file.StaticFileReader;
 
 import java.util.Map;
 

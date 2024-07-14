@@ -5,8 +5,6 @@ import codesquad.application.UserHandler;
 import codesquad.webserver.http.HttpRequest;
 import codesquad.webserver.http.HttpResponse;
 import codesquad.webserver.http.type.HttpMethod;
-import codesquad.webserver.http.type.HttpProtocol;
-import codesquad.webserver.http.type.HttpStatus;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -43,6 +41,6 @@ public class DynamicRequestHandler implements RouterHandler {
             return handler.apply(httpRequest);
         }
 
-        return new HttpResponse(HttpProtocol.HTTP_1_1, HttpStatus.INTERNAL_SERVER_ERROR, null, "서버에서 에러가 발생했습니다.");
+        return HttpResponse.internalServerError("서버에서 에러가 발생했습니다.");
     }
 }

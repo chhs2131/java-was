@@ -4,10 +4,8 @@ import codesquad.webserver.http.HttpRequest;
 import codesquad.webserver.http.HttpResponse;
 import codesquad.webserver.http.type.ContentType;
 import codesquad.webserver.http.type.HttpHeader;
-import codesquad.webserver.http.type.HttpProtocol;
-import codesquad.webserver.http.type.HttpStatus;
 import codesquad.webserver.util.StringUtil;
-import codesquad.webserver.StaticFileReader;
+import codesquad.webserver.file.StaticFileReader;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -39,7 +37,7 @@ public class StaticRequestHandler implements RouterHandler {
         String resourcePath = getResourcePath(path);
 
         if (resourcePath == null || resourcePath.isEmpty()) {
-            return new HttpResponse(HttpProtocol.HTTP_1_1, HttpStatus.BAD_REQUEST, null, "요청이 잘못된 것 같은데요?");
+            return HttpResponse.badRequest("잘못된 요청입니다. Path: " + resourcePath);
         }
 
         String mimeType = getMimeType(resourcePath);
@@ -50,10 +48,10 @@ public class StaticRequestHandler implements RouterHandler {
 
         try {
             fileData = getStaticFile(resourcePath);
-            return new HttpResponse(HttpProtocol.HTTP_1_1, HttpStatus.OK, headers, fileData);
+            return HttpResponse.ok(headers, fileData);
         } catch (Exception e) {
             logger.debug("HTTP NotFound Exception. {}", resourcePath);
-            return new HttpResponse(HttpProtocol.HTTP_1_1, HttpStatus.NOT_FOUND, null, "파일을 찾을 수 없습니다~");
+            return HttpResponse.notFound("파일을 찾을 수 없습니다. Path: " + resourcePath);
         }
     }
 

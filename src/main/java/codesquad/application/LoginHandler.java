@@ -30,12 +30,11 @@ public class LoginHandler {
 
             HttpHeader headers = HttpHeader.createRedirection("/main/index.html");
             headers.setCookie(Cookie.from(session));
+
             return new HttpResponse(HttpProtocol.HTTP_1_1, HttpStatus.FOUND, headers, "로그인 완료!");
         } catch (IllegalArgumentException e) {
             logger.debug("유저 정보가 올바르지 않습니다. 이름:{}", name);
-
-            HttpHeader headers = HttpHeader.createRedirection("/user/login_failed.html");
-            return new HttpResponse(HttpProtocol.HTTP_1_1, HttpStatus.FOUND, headers, null);
+            return HttpResponse.found("/user/login_failed.html", null);
         }
     }
 
@@ -47,7 +46,7 @@ public class LoginHandler {
         User context = AuthenticationHolder.getContext();
         if (context == null) {
             logger.debug("세션이 존재하지 않습니다. sid:{}", sid);
-            return new HttpResponse(HttpProtocol.HTTP_1_1, HttpStatus.UNAUTHORIZED, HttpHeader.createEmpty(), "세션이 존재하지 않습니다.");
+            return HttpResponse.unauthorized("세션이 존재하지 않습니다.");  // TODO 추후에 Exception으로 대체하고 상위에서 handle
         }
 
         sessionManager.removeSession(sid);

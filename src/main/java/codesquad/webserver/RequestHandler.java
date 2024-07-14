@@ -2,8 +2,6 @@ package codesquad.webserver;
 
 import codesquad.webserver.http.HttpRequest;
 import codesquad.webserver.http.HttpResponse;
-import codesquad.webserver.http.type.HttpProtocol;
-import codesquad.webserver.http.type.HttpStatus;
 import codesquad.webserver.handler.*;
 
 import java.util.ArrayList;
@@ -28,6 +26,6 @@ public class RequestHandler {
     }
 
     private HttpResponse createBadRequest() {
-        return new HttpResponse(HttpProtocol.HTTP_1_1, HttpStatus.BAD_REQUEST, null, "요청이 잘못된 것 같은데요?");
+        return HttpResponse.badRequest("요청이 잘못된 것 같은데요?");
     }
 }
