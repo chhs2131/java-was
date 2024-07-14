@@ -1,5 +1,6 @@
 package codesquad.webserver.handler;
 
+import codesquad.application.HtmlPageHandler;
 import codesquad.application.LoginHandler;
 import codesquad.application.UserHandler;
 import codesquad.webserver.http.HttpRequest;
@@ -17,12 +18,14 @@ public class DynamicRequestHandler implements RouterHandler {
     private static final Map<HandlerPath, Function<HttpRequest, HttpResponse>> mapping = new HashMap<>();
     static {
         // 외부에서 전달받도록 수정 필요
-        mapping.put(new HandlerPath(HttpMethod.POST, "/user/create"), UserHandler::createUser);
         mapping.put(new HandlerPath(HttpMethod.POST, "/user/login"), LoginHandler::login);
         mapping.put(new HandlerPath(HttpMethod.POST, "/user/logout"), LoginHandler::logout);
+        mapping.put(new HandlerPath(HttpMethod.POST, "/user/create"), UserHandler::createUser);
         mapping.put(new HandlerPath(HttpMethod.GET, "/user/list"), UserHandler::getUserList);
         mapping.put(new HandlerPath(HttpMethod.GET, "/index.html"), UserHandler::getHomepage);
         mapping.put(new HandlerPath(HttpMethod.GET, "/"), UserHandler::getHomepage);
+        mapping.put(new HandlerPath(HttpMethod.GET, "/registration"), HtmlPageHandler::getRegistrationPage);
+        mapping.put(new HandlerPath(HttpMethod.GET, "/login"), HtmlPageHandler::getLoginPage);
     }
 
     @Override
