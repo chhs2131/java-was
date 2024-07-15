@@ -1,5 +1,6 @@
 package codesquad.webserver.file;
 
+import codesquad.webserver.exception.OpenResourceException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -13,7 +14,7 @@ public class StaticFileReader {
         try (InputStream resource = getClass().getClassLoader().getResourceAsStream(STATIC_FILE_PATH + path)) {
             return new String(resource.readAllBytes());
         } catch (IOException e) {
-            throw new IllegalArgumentException("파일을 읽는 중 오류가 발생했습니다. path: " + path, e);
+            throw new OpenResourceException("파일을 읽는 중 오류가 발생했습니다. path: " + path);
         }
     }
 }
