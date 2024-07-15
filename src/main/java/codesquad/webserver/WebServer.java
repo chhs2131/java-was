@@ -1,12 +1,10 @@
 package codesquad.webserver;
 
-import codesquad.application.AnnotationScanner;
-import codesquad.application.HtmlPageHandler;
-import codesquad.application.LoginHandler;
-import codesquad.application.UserHandler;
+import codesquad.webserver.util.AnnotationScanner;
 import codesquad.webserver.handler.DynamicRequestHandler;
 import codesquad.webserver.handler.RouterHandler;
 import codesquad.webserver.handler.StaticRequestHandler;
+import codesquad.webserver.util.ClassFinder;
 import java.util.ArrayList;
 import java.util.List;
 import org.slf4j.Logger;
@@ -40,20 +38,19 @@ public class WebServer {
     }
 
     public List<RouterHandler> getHandlerList(String basePackage) {
-        List<RouterHandler> handlers = new ArrayList<>();
-        List<Class<?>> controllers = List.of(
-            LoginHandler.class,
-            UserHandler.class,
-            HtmlPageHandler.class
-        );
+      // 클래스 스캔
+       try {
+           final List<Class<?>> classes = ClassFinder.getClassesForPackage(basePackage);
+           final List<Class<?>> components = AnnotationScanner.getComponents(classes);
 
-        handlers.add(
-            new DynamicRequestHandler(
-                AnnotationScanner.getRequestMap(controllers),
-                AnnotationScanner.getComponents(controllers)
-            )
-        );
-        handlers.add(new StaticRequestHandler());
-        return handlers;
+           List<RouterHandler> handlers = new ArrayList<>();
+           handlers.add(new DynamicRequestHandler(
+                   AnnotationScanner.getRequestMap(components),
+                   AnnotationScanner.getInstances(components)));
+           handlers.add(new StaticRequestHandler());
+           return handlers;
+       } catch (Exception e) {
+           throw new RuntimeException(e);
+       }
     }
 }

@@ -1,4 +1,4 @@
-package codesquad.application;
+package codesquad.webserver.util;
 
 import codesquad.webserver.annotation.Controller;
 import codesquad.webserver.annotation.RequestMapping;
@@ -12,33 +12,34 @@ import java.util.List;
 import java.util.Map;
 
 public class AnnotationScanner {
-    public Map<Class<?>, Object> getComponents(List<Class<?>> controllers) {
+    private AnnotationScanner() {}
+
+    public static List<Class<?>> getComponents(List<Class<?>> classes) {
+        return classes.stream()
+            .filter(clazz -> clazz.isAnnotationPresent(Controller.class))
+            .toList();
+    }
+
+    public static Map<Class<?>, Object> getInstances(List<Class<?>> components) {
         Map<Class<?>, Object> map = new HashMap<>();
 
-        controllers.stream()
-            .filter(controller -> controller.isAnnotationPresent(Controller.class))
-            .forEach(controller -> {
+        components.forEach(component -> {
                 try {
-                    final Constructor<?> constructor = controller.getConstructor();
+                    final Constructor<?> constructor = component.getConstructor();
                     final Object o = constructor.newInstance();
-                    map.put(controller, o);
-                } catch (NoSuchMethodException e) {
-                    throw new RuntimeException(e);
-                } catch (InvocationTargetException e) {
-                    throw new RuntimeException(e);
-                } catch (InstantiationException e) {
-                    throw new RuntimeException(e);
-                } catch (IllegalAccessException e) {
+                    map.put(component, o);
+                } catch (NoSuchMethodException | InvocationTargetException | InstantiationException |
+                         IllegalAccessException e) {
                     throw new RuntimeException(e);
                 }
-            });
+        });
         return map;
     }
 
-    public Map<HandlerPath, Method> getRequestMap(List<Class<?>> controllers) {
+    public static Map<HandlerPath, Method> getRequestMap(List<Class<?>> components) {
         Map<HandlerPath, Method> requestMap = new HashMap<>();
 
-        controllers.stream()
+        components.stream()
             .map(clazz -> Arrays.stream(clazz.getDeclaredMethods())
                 .filter(method -> method.isAnnotationPresent(RequestMapping.class))
                 .toList()
