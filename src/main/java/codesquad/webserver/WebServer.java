@@ -5,7 +5,6 @@ import codesquad.webserver.handler.DynamicRequestHandler;
 import codesquad.webserver.handler.RouterHandler;
 import codesquad.webserver.handler.StaticRequestHandler;
 import codesquad.webserver.util.ClassFinder;
-import java.util.ArrayList;
 import java.util.List;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -22,10 +21,11 @@ public class WebServer {
     private ServerSocket serverSocket;
     private HttpThreadPool httpThreadPool;
 
-    public void init(int port, String basePackage) throws IOException {
-        serverSocket = new ServerSocket(port);
+    public void init(int port, String basePackage) throws IOException, ClassNotFoundException {
         logger.debug("Listening for connection on port {} ....", port);
-        requestHandler = new RequestHandler(getHandlerList(basePackage));
+        serverSocket = new ServerSocket(port);
+        RouterHandler dynamicHandler = getDynamicHandler(basePackage);
+        requestHandler = new RequestHandler(List.of(dynamicHandler, new StaticRequestHandler()));
         httpThreadPool = new HttpThreadPool(Executors.newFixedThreadPool(THREAD_POOL_SIZE));
     }
 
@@ -37,20 +37,11 @@ public class WebServer {
         }
     }
 
-    public List<RouterHandler> getHandlerList(String basePackage) {
-      // 클래스 스캔
-       try {
-           final List<Class<?>> classes = ClassFinder.getClassesForPackage(basePackage);
-           final List<Class<?>> components = AnnotationScanner.getComponents(classes);
-
-           List<RouterHandler> handlers = new ArrayList<>();
-           handlers.add(new DynamicRequestHandler(
-                   AnnotationScanner.getRequestMap(components),
-                   AnnotationScanner.getInstances(components)));
-           handlers.add(new StaticRequestHandler());
-           return handlers;
-       } catch (Exception e) {
-           throw new RuntimeException(e);
-       }
+    public RouterHandler getDynamicHandler(String basePackage) throws IOException, ClassNotFoundException {
+        final List<Class<?>> classes = ClassFinder.getClassesForPackage(basePackage);
+        final List<Class<?>> components = AnnotationScanner.getComponents(classes);
+        return new DynamicRequestHandler(
+            AnnotationScanner.getRequestMap(components),
+            AnnotationScanner.getInstances(components));
     }
 }
