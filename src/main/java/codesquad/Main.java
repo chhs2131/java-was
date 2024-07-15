@@ -9,7 +9,7 @@ public class Main {
 
     public static void main(String[] args) throws IOException {
         WebServer webServer = new WebServer();
-        webServer.init(PORT);
+        webServer.init(PORT, "codesquad.application");
         webServer.run();
     }
 }

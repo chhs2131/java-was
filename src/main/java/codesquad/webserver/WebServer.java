@@ -1,5 +1,14 @@
 package codesquad.webserver;
 
+import codesquad.application.AnnotationScanner;
+import codesquad.application.HtmlPageHandler;
+import codesquad.application.LoginHandler;
+import codesquad.application.UserHandler;
+import codesquad.webserver.handler.DynamicRequestHandler;
+import codesquad.webserver.handler.RouterHandler;
+import codesquad.webserver.handler.StaticRequestHandler;
+import java.util.ArrayList;
+import java.util.List;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -15,10 +24,10 @@ public class WebServer {
     private ServerSocket serverSocket;
     private HttpThreadPool httpThreadPool;
 
-    public void init(int port) throws IOException {
+    public void init(int port, String basePackage) throws IOException {
         serverSocket = new ServerSocket(port);
         logger.debug("Listening for connection on port {} ....", port);
-        requestHandler = new RequestHandler();
+        requestHandler = new RequestHandler(getHandlerList(basePackage));
         httpThreadPool = new HttpThreadPool(Executors.newFixedThreadPool(THREAD_POOL_SIZE));
     }
 
@@ -28,5 +37,23 @@ public class WebServer {
             logger.debug("Client connected {} {}", clientSocket.getLocalPort(), clientSocket.getLocalAddress());
             httpThreadPool.execute(new HttpTask(clientSocket, requestHandler));
         }
+    }
+
+    public List<RouterHandler> getHandlerList(String basePackage) {
+        List<RouterHandler> handlers = new ArrayList<>();
+        List<Class<?>> controllers = List.of(
+            LoginHandler.class,
+            UserHandler.class,
+            HtmlPageHandler.class
+        );
+
+        handlers.add(
+            new DynamicRequestHandler(
+                AnnotationScanner.getRequestMap(controllers),
+                AnnotationScanner.getComponents(controllers)
+            )
+        );
+        handlers.add(new StaticRequestHandler());
+        return handlers;
     }
 }

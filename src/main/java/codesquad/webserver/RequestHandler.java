@@ -1,35 +1,19 @@
 package codesquad.webserver;
 
-import codesquad.application.AnnotationScanner;
-import codesquad.application.HtmlPageHandler;
-import codesquad.application.LoginHandler;
-import codesquad.application.UserHandler;
 import codesquad.webserver.http.HttpRequest;
 import codesquad.webserver.http.HttpResponse;
 import codesquad.webserver.handler.*;
 
-import java.util.ArrayList;
 import java.util.List;
 
 /**
- * 요청에 해당하는 로직을 수행하고, HTTP 응답을 진행합니다.
+ * 요청에 해당하는 handler를 찾아 처리하고 HTTP 응답을 반환합니다.
  */
 public class RequestHandler {
-    private static final List<RouterHandler> handlers = new ArrayList<>();
-    static {
-        List<Class<?>> controllers = List.of(
-            LoginHandler.class,
-            UserHandler.class,
-            HtmlPageHandler.class
-        );
+    private final List<RouterHandler> handlers;
 
-        handlers.add(
-            new DynamicRequestHandler(
-                new AnnotationScanner().getRequestMap(controllers),
-                new AnnotationScanner().getComponents(controllers)
-            )
-        );
-        handlers.add(new StaticRequestHandler());
+    public RequestHandler(final List<RouterHandler> handlers) {
+        this.handlers = handlers;
     }
 
     public HttpResponse handle(HttpRequest httpRequest) {
