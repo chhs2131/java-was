@@ -2,6 +2,7 @@ package codesquad.application;
 
 import static codesquad.webserver.file.FileHttpResponseCreator.create;
 
+import codesquad.database.ArticleDatabase;
 import codesquad.webserver.annotation.Controller;
 import codesquad.webserver.annotation.RequestMapping;
 import codesquad.webserver.authentication.AuthenticationHolder;
@@ -9,6 +10,7 @@ import codesquad.webserver.http.HttpRequest;
 import codesquad.webserver.http.HttpResponse;
 import codesquad.webserver.http.type.Cookie;
 import codesquad.webserver.http.type.HttpMethod;
+import java.util.List;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -45,7 +47,12 @@ public class HtmlPageHandler {
             buttonValue = "<a class=\"btn btn_ghost btn_size_s\" href=\"/user/logout\">로그아웃</a>";
         }
 
+        // article 제목 목록
+        StringBuilder titles = new StringBuilder();
+        final List<Article> articles = ArticleDatabase.getAll();
+        articles.forEach(article -> titles.append(article.title()).append("\n"));
+
         String resourcePath = "/index.html";
-        return create(resourcePath, Map.of("holder", holderValue, "signupOrLogoutButton", buttonValue));
+        return create(resourcePath, Map.of("holder", holderValue, "signupOrLogoutButton", buttonValue, "articles", titles.toString()));
     }
 }

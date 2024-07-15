@@ -1,5 +1,6 @@
 package codesquad.application;
 
+import codesquad.database.ArticleDatabase;
 import codesquad.webserver.annotation.Controller;
 import codesquad.webserver.annotation.RequestMapping;
 import codesquad.webserver.authentication.AuthenticationHolder;
@@ -26,7 +27,18 @@ public class ArticleHandler {
 
     @RequestMapping(method = HttpMethod.POST, path = "/article/write")
     public HttpResponse writeArticle(HttpRequest request) {
-        logger.debug("글쓰기 요청 도착! {}", request);
+        final User context = AuthenticationHolder.getContext();
+        if (context == null) {
+            logger.debug("세션 정보가 없습니다.");
+            return HttpResponse.found("/user/login_failed.html", null);
+        }
+
+        final String title = request.body().get("title");
+        final String content = request.body().get("content");
+
+        final Article article = new Article(title, content);
+        ArticleDatabase.add(article);
+
         return HttpResponse.found("/", "글쓰기 성공!");
     }
 }
