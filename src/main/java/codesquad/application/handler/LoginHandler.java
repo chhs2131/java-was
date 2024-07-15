@@ -1,5 +1,6 @@
-package codesquad.application;
+package codesquad.application.handler;
 
+import codesquad.application.domain.User;
 import codesquad.database.UserDatabase;
 import codesquad.webserver.annotation.RequestMapping;
 import codesquad.webserver.authentication.AuthenticationHolder;

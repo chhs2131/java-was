@@ -1,6 +1,6 @@
 package codesquad.webserver.filter;
 
-import codesquad.application.User;
+import codesquad.application.domain.User;
 import codesquad.webserver.authentication.AuthenticationHolder;
 import codesquad.webserver.http.HttpRequest;
 import codesquad.webserver.http.type.Cookie;

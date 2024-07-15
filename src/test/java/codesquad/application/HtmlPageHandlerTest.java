@@ -1,5 +1,7 @@
 package codesquad.application;
 
+import codesquad.application.handler.HtmlPageHandler;
+import codesquad.application.domain.User;
 import codesquad.database.SessionDatabase;
 import codesquad.database.UserDatabase;
 import codesquad.webserver.authentication.AuthenticationHolder;

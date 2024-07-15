@@ -1,6 +1,6 @@
 package codesquad.webserver.authentication;
 
-import codesquad.application.User;
+import codesquad.application.domain.User;
 
 public class AuthenticationHolder {
     private static final ThreadLocal<User> context = new ThreadLocal<>();

@@ -1,6 +1,6 @@
 package codesquad.database;
 
-import codesquad.application.User;
+import codesquad.application.domain.User;
 
 import java.util.Collections;
 import java.util.List;

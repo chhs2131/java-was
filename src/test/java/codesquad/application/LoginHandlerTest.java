@@ -2,6 +2,8 @@ package codesquad.application;
 
 import static org.junit.jupiter.api.Assertions.*;
 
+import codesquad.application.handler.LoginHandler;
+import codesquad.application.domain.User;
 import codesquad.database.SessionDatabase;
 import codesquad.database.UserDatabase;
 import codesquad.webserver.authentication.AuthenticationHolder;

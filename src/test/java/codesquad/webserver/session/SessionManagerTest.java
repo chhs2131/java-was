@@ -1,6 +1,6 @@
 package codesquad.webserver.session;
 
-import codesquad.application.User;
+import codesquad.application.domain.User;
 import codesquad.database.SessionDatabase;
 import java.time.LocalDateTime;
 import java.util.HashMap;

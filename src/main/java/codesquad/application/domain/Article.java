@@ -1,4 +1,4 @@
-package codesquad.application;
+package codesquad.application.domain;
 
 public record Article(
     String title,

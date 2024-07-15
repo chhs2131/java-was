@@ -1,7 +1,8 @@
-package codesquad.application;
+package codesquad.application.handler;
 
 import static codesquad.webserver.file.FileHttpResponseCreator.create;
 
+import codesquad.application.domain.User;
 import codesquad.database.UserDatabase;
 import codesquad.webserver.annotation.Controller;
 import codesquad.webserver.annotation.RequestMapping;

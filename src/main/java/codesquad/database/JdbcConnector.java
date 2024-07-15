@@ -7,7 +7,7 @@ import java.sql.SQLException;
 import java.sql.Statement;
 
 public class JdbcConnector {
-    private static final String JDBC_URL = "jdbc:h2:~/was";  // "jdbc:h2:mem:was";  mem db는 지속되지 못하는 이유? 동일한 DriverManager를 써야하나?
+    private static final String JDBC_URL = "jdbc:h2:mem:was;DB_CLOSE_DELAY=-1";  // 메모리 DB 삭제하지 않음
     private static final String JDBC_USER = "sa";
     private static final String JDBC_PASSWORD = "";
 
@@ -38,5 +38,9 @@ public class JdbcConnector {
             e.printStackTrace();
             throw new RuntimeException();  // TODO throw CustomException
         }
+    }
+
+    public void clear() {
+        // 데이터베이스 전체를 초기화하기
     }
 }

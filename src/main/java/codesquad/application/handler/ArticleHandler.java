@@ -1,5 +1,7 @@
-package codesquad.application;
+package codesquad.application.handler;
 
+import codesquad.application.domain.Article;
+import codesquad.application.domain.User;
 import codesquad.database.ArticleDatabase;
 import codesquad.webserver.annotation.Controller;
 import codesquad.webserver.annotation.RequestMapping;
