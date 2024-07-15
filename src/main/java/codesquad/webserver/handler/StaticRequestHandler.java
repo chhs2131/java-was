@@ -3,6 +3,7 @@ package codesquad.webserver.handler;
 import codesquad.webserver.file.FileHttpResponseCreator;
 import codesquad.webserver.http.HttpRequest;
 import codesquad.webserver.http.HttpResponse;
+import codesquad.webserver.http.type.HttpStatus;
 import codesquad.webserver.util.StringUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -27,7 +28,7 @@ public class StaticRequestHandler implements RouterHandler {
             return FileHttpResponseCreator.create(resourcePath);
         } catch (Exception e) {
             logger.debug("HTTP NotFound Exception. {}", resourcePath);
-            return HttpResponse.notFound("파일을 찾을 수 없습니다. Path: " + resourcePath);
+            return FileHttpResponseCreator.create(HttpStatus.NOT_FOUND, "/error/notfound.html");
         }
     }
 
