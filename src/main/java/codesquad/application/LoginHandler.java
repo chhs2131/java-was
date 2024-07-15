@@ -30,7 +30,7 @@ public class LoginHandler {
             User user = UserDatabase.getUserByIdAndPassword(name, password);
             Session session = sessionManager.createSession(user);
 
-            HttpHeader headers = HttpHeader.createRedirection("/main/index.html");
+            HttpHeader headers = HttpHeader.createRedirection("/");
             headers.setCookie(Cookie.from(session));
 
             return new HttpResponse(HttpProtocol.HTTP_1_1, HttpStatus.FOUND, headers, "로그인 완료!");
@@ -40,7 +40,7 @@ public class LoginHandler {
         }
     }
 
-    @RequestMapping(method = HttpMethod.POST, path = "/user/logout")
+    @RequestMapping(method = HttpMethod.GET, path = "/user/logout")
     public HttpResponse logout(HttpRequest httpRequest) {
         final Cookie cookies = httpRequest.headers().getCookies();
         final String sid = cookies.get("SID");
@@ -54,7 +54,7 @@ public class LoginHandler {
         sessionManager.removeSession(sid);
         logger.debug("정상적으로 로그아웃하였습니다. sid:{}", sid);
 
-        HttpHeader headers = HttpHeader.createRedirection("/index.html");
+        HttpHeader headers = HttpHeader.createRedirection("/");
         headers.setCookie(Cookie.expiredSession());
         return new HttpResponse(HttpProtocol.HTTP_1_1, HttpStatus.FOUND, headers, "로그아웃하였습니다.");
     }

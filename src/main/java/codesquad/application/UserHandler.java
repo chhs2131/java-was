@@ -19,24 +19,6 @@ import java.util.Map;
 public class UserHandler {
     private static final Logger logger = LoggerFactory.getLogger(UserHandler.class);
 
-    @RequestMapping(method = HttpMethod.GET, path = "/")
-    public HttpResponse getHomepage(HttpRequest httpRequest) {
-        final Cookie cookies = httpRequest.headers().getCookies();
-        final String sid = cookies.get("SID");
-
-        User user = AuthenticationHolder.getContext();
-        String holderValue = "";
-        if (user == null) {
-            logger.debug("세션이 존재하지 않습니다. sid:{}", sid);
-            holderValue = "<a class=\"btn btn_contained btn_size_s\" href=\"/login\">로그인</a>";
-        } else {
-            holderValue = user.getName() + "님 환영합니다.";
-        }
-
-        String resourcePath = "/index.html";
-        return create(resourcePath, Map.of("holder", holderValue));
-    }
-
     @RequestMapping(method = HttpMethod.GET, path = "/user/list")
     public HttpResponse getUserList(HttpRequest httpRequest) {
         final Cookie cookies = httpRequest.headers().getCookies();
@@ -74,6 +56,6 @@ public class UserHandler {
         final User user = new User(name, password, nickname, email);
         UserDatabase.addUser(user);
         logger.debug("회원가입을 완료했습니다. {}", user);
-        return HttpResponse.found("/index.html", "유저가 생성되었습니다.");
+        return HttpResponse.found("/", "유저가 생성되었습니다.");
     }
 }

@@ -42,7 +42,7 @@ class LoginHandlerTest {
         HttpResponse response = loginHandler.login(httpRequest);
 
         assertEquals(HttpStatus.FOUND, response.status());
-        assertEquals("/main/index.html", response.headers().get("Location"));
+        assertEquals("/", response.headers().get("Location"));
         assertTrue(response.headers().contains("Set-Cookie"));
         assertEquals("로그인 완료!", response.body());
     }
@@ -79,7 +79,7 @@ class LoginHandlerTest {
         HttpResponse response = loginHandler.logout(httpRequest);
 
         assertEquals(HttpStatus.FOUND, response.status());
-        assertEquals("/index.html", response.headers().get("Location"));
+        assertEquals("/", response.headers().get("Location"));
         assertFalse(sessionManager.validSession(sessionId));
     }
 

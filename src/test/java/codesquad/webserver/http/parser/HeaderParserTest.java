@@ -19,8 +19,6 @@ class HeaderParserTest {
 
         HttpHeader result = HeaderParser.parse(lines);
 
-        System.out.println(result.getCookies());
-
         assertEquals(3, result.size());
         assertEquals("example.com", result.get("Host"));
         assertEquals("keep-alive", result.get("Connection"));
