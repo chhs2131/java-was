@@ -1,5 +1,6 @@
 package codesquad.webserver;
 
+import codesquad.webserver.file.ErrorPageResponseFactory;
 import codesquad.webserver.http.HttpRequest;
 import codesquad.webserver.http.HttpResponse;
 import codesquad.webserver.handler.*;
@@ -25,6 +26,6 @@ public class RequestHandler {
     }
 
     private HttpResponse createBadRequest() {
-        return HttpResponse.badRequest("요청이 잘못된 것 같은데요?");
+        return ErrorPageResponseFactory.badRequest();
     }
 }

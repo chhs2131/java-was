@@ -1,9 +1,10 @@
 package codesquad.webserver.handler;
 
+import codesquad.webserver.exception.OpenResourceException;
+import codesquad.webserver.file.ErrorPageResponseFactory;
 import codesquad.webserver.file.FileHttpResponseCreator;
 import codesquad.webserver.http.HttpRequest;
 import codesquad.webserver.http.HttpResponse;
-import codesquad.webserver.http.type.HttpStatus;
 import codesquad.webserver.util.StringUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -26,9 +27,9 @@ public class StaticRequestHandler implements RouterHandler {
 
         try {
             return FileHttpResponseCreator.create(resourcePath);
-        } catch (Exception e) {
+        } catch (OpenResourceException e) {
             logger.debug("HTTP NotFound Exception. {}", resourcePath);
-            return FileHttpResponseCreator.create(HttpStatus.NOT_FOUND, "/error/notfound.html");
+            return ErrorPageResponseFactory.notFound();
         }
     }
 

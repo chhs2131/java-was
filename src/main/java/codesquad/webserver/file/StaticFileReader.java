@@ -13,7 +13,7 @@ public class StaticFileReader {
     public String read(String path) {
         try (InputStream resource = getClass().getClassLoader().getResourceAsStream(STATIC_FILE_PATH + path)) {
             return new String(resource.readAllBytes());
-        } catch (IOException e) {
+        } catch (IOException | NullPointerException e) {
             throw new OpenResourceException("파일을 읽는 중 오류가 발생했습니다. path: " + path);
         }
     }
