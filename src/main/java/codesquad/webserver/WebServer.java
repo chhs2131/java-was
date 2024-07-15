@@ -1,11 +1,14 @@
 package codesquad.webserver;
 
+import codesquad.webserver.handler.HandlerPath;
 import codesquad.webserver.util.AnnotationScanner;
 import codesquad.webserver.handler.DynamicRequestHandler;
 import codesquad.webserver.handler.RouterHandler;
 import codesquad.webserver.handler.StaticRequestHandler;
 import codesquad.webserver.util.ClassFinder;
+import java.lang.reflect.Method;
 import java.util.List;
+import java.util.Map;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -40,8 +43,12 @@ public class WebServer {
     public RouterHandler getDynamicHandler(String basePackage) throws IOException, ClassNotFoundException {
         final List<Class<?>> classes = ClassFinder.getClassesForPackage(basePackage);
         final List<Class<?>> components = AnnotationScanner.getComponents(classes);
-        return new DynamicRequestHandler(
-            AnnotationScanner.getRequestMap(components),
-            AnnotationScanner.getInstances(components));
+        logger.debug("컴포넌트들을 찾았습니다. {}", components);
+
+        final Map<HandlerPath, Method> requestMap = AnnotationScanner.getRequestMap(components);
+        final Map<Class<?>, Object> instances = AnnotationScanner.getInstances(components);
+        logger.debug("맵핑할 API EndPoint들을 등록합니다. {}", requestMap);
+
+        return new DynamicRequestHandler(requestMap, instances);
     }
 }
