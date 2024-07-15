@@ -1,5 +1,6 @@
 package codesquad.webserver.socket;
 
+import codesquad.webserver.exception.SocketIoException;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.net.Socket;
@@ -11,6 +12,11 @@ public class SocketWriter {
         this.socket = socket;
     }
 
+    /**
+     * 전달된 Socket의 OutputStream을 통해 값을 전달합니다.
+     * @param message
+     * @throws SocketIoException 소켓 IOException 발생시
+     */
     public void write(byte[] message) {
         try {
             OutputStream clientOutput = socket.getOutputStream();
@@ -18,7 +24,7 @@ public class SocketWriter {
             clientOutput.flush();
         } catch (IOException e) {
             e.printStackTrace();
-            throw new IllegalArgumentException("응답 반환중 문제가 발생했어요. ^_^");
+            throw new SocketIoException("Socket 연결이 불안정합니다.");
         }
     }
 }

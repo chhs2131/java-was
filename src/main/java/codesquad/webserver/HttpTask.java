@@ -1,5 +1,6 @@
 package codesquad.webserver;
 
+import codesquad.webserver.exception.SocketIoException;
 import codesquad.webserver.filter.SessionFilter;
 import codesquad.webserver.http.HttpRequest;
 import codesquad.webserver.http.parser.HttpRequestParser;
@@ -23,9 +24,10 @@ public record HttpTask(Socket clientSocket, RequestHandler requestHandler) imple
 
     @Override
     public void run() {
-        try {
-            SocketReader socketReader = new SocketReader(clientSocket);
-            SocketWriter socketWriter = new SocketWriter(clientSocket);
+        SocketReader socketReader = new SocketReader(clientSocket);
+        SocketWriter socketWriter = new SocketWriter(clientSocket);
+
+        try (clientSocket) {
             String message = socketReader.read();
 
             HttpRequest request = HttpRequestParser.parse(message);
@@ -40,10 +42,11 @@ public record HttpTask(Socket clientSocket, RequestHandler requestHandler) imple
             HttpResponse response = requestHandler.handle(request);
             byte[] socketBytes = ResponseConverter.toSocketBytes(response);
             socketWriter.write(socketBytes);
-
-            clientSocket.close();
+        } catch (SocketIoException e) {
+            logger.error("Socket IO 작업에서 예외가 발생했습니다.");
+            e.printStackTrace();
         } catch (IOException e) {
-            logger.error("요청 처리를 실패했습니다. {}", e.getMessage());
+            logger.error("Socket을 close하는 중에 예외가 발생했습니다.");
             e.printStackTrace();
         }
     }

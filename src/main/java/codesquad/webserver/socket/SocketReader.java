@@ -1,5 +1,6 @@
 package codesquad.webserver.socket;
 
+import codesquad.webserver.exception.SocketIoException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.Socket;
@@ -12,6 +13,11 @@ public class SocketReader {
         this.socket = socket;
     }
 
+    /**
+     * 전달된 Socket의 InputStream을 통해 값을 읽습니다.
+     * @return String 값
+     * @throws SocketIoException 소켓 IOException 발생시
+     */
     public String read() {
         return getInputStream(socket);
     }
@@ -31,7 +37,7 @@ public class SocketReader {
             return sb.toString();
         } catch (IOException e) {
             e.printStackTrace();
-            throw new IllegalArgumentException("올바르지 않은 입력입니다.");
+            throw new SocketIoException("Socket 연결이 불안정합니다.");
         }
     }
 }
