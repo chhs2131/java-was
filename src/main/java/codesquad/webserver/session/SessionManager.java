@@ -1,7 +1,7 @@
 package codesquad.webserver.session;
 
 import codesquad.application.dao.SessionDao;
-import codesquad.database.SessionDatabase;
+import codesquad.database.java.SessionDatabase;
 import codesquad.application.domain.User;
 
 import java.time.LocalDateTime;

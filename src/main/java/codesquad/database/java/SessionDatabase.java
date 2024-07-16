@@ -1,4 +1,4 @@
-package codesquad.database;
+package codesquad.database.java;
 
 import codesquad.application.dao.SessionDao;
 import codesquad.webserver.session.Session;

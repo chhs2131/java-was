@@ -5,7 +5,7 @@ import static org.junit.jupiter.api.Assertions.*;
 import codesquad.application.dao.UserDao;
 import codesquad.application.handler.UserHandler;
 import codesquad.application.domain.User;
-import codesquad.database.UserDatabase;
+import codesquad.database.java.UserDatabase;
 import codesquad.webserver.authentication.AuthenticationHolder;
 import codesquad.webserver.http.HttpRequest;
 import codesquad.webserver.http.HttpResponse;

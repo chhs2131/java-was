@@ -4,7 +4,7 @@ import static codesquad.webserver.file.FileHttpResponseCreator.create;
 
 import codesquad.application.dao.UserDao;
 import codesquad.application.domain.User;
-import codesquad.database.UserDatabase;
+import codesquad.database.java.UserDatabase;
 import codesquad.webserver.annotation.Controller;
 import codesquad.webserver.annotation.RequestMapping;
 import codesquad.webserver.authentication.AuthenticationHolder;
