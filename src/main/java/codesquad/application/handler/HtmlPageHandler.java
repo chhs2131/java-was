@@ -10,7 +10,6 @@ import codesquad.webserver.annotation.RequestMapping;
 import codesquad.webserver.authentication.AuthenticationHolder;
 import codesquad.webserver.http.HttpRequest;
 import codesquad.webserver.http.HttpResponse;
-import codesquad.webserver.http.type.Cookie;
 import codesquad.webserver.http.type.HttpMethod;
 import java.util.List;
 import org.slf4j.Logger;
@@ -39,14 +38,11 @@ public class HtmlPageHandler {
 
     @RequestMapping(method = HttpMethod.GET, path = "/")
     public HttpResponse getHomepage(HttpRequest httpRequest) {
-        final Cookie cookies = httpRequest.headers().getCookies();
-        final String sid = cookies.get("SID");
-
         User user = AuthenticationHolder.getContext();
         String holderValue = "";
         String buttonValue = "";
         if (user == null) {
-            logger.debug("세션이 존재하지 않습니다. sid:{}", sid);
+            logger.debug("세션이 존재하지 않습니다.");
             holderValue = "<a class=\"btn btn_contained btn_size_s\" href=\"/login\">로그인</a>";
             buttonValue = "<a class=\"btn btn_ghost btn_size_s\" href=\"/registration\">회원 가입</a>";
         } else {
@@ -57,9 +53,15 @@ public class HtmlPageHandler {
         // article 제목 목록
         StringBuilder titles = new StringBuilder();
         final List<Article> articles = articleDao.findAll();
-        articles.forEach(article -> titles.append("<p>").append(article.id() + " => " + article.title() + " " + article.content()).append("</p>"));
+        articles.forEach(article -> titles.append("<div class=\"article\"><a href=\"/article?id=").append(article.id()).append("\">").append(article.title()).append("</a></div>"));
+        if (titles.isEmpty()) {
+            titles.append("<div class=\"article\">작성된 글이 없습니다.</div>");
+        }
 
         String resourcePath = "/index.html";
-        return create(resourcePath, Map.of("holder", holderValue, "signupOrLogoutButton", buttonValue, "articles", titles.toString()));
+        return create(resourcePath, Map.of(
+            "holder", holderValue,
+            "signupOrLogoutButton", buttonValue,
+            "articles", titles.toString()));
     }
 }

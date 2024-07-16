@@ -65,9 +65,8 @@ public class ArticleH2 implements ArticleDao {
                             String title = resultSet.getString("title");
                             String content = resultSet.getString("content");
                             return Optional.of(new Article(articleId, title, content));
-                        } else {
-                            return Optional.empty();
                         }
+                        return Optional.empty();
                     } catch (SQLException e) {
                         throw new JdbcException(e);
                     }

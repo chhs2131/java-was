@@ -144,3 +144,21 @@
   width: 32px;
   height: 32px;
 }
+
+.article {
+  background-color: ghostwhite;
+  padding: 15px;
+  margin: 5px;
+  border-radius: 5px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.article a {
+  text-decoration: none;
+  color: #333;
+  font-size: 1.1em;
+}
+
+.article a:hover {
+  color: #4CAF50;
+}

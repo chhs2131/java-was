@@ -1,6 +1,7 @@
 package codesquad.application.handler;
 
 import codesquad.application.dao.ArticleDao;
+import codesquad.application.dao.CommentDao;
 import codesquad.application.domain.Article;
 import codesquad.application.domain.User;
 import codesquad.webserver.annotation.Controller;
@@ -19,9 +20,11 @@ import java.util.Map;
 public class ArticleHandler {
     private static final Logger logger = LoggerFactory.getLogger(ArticleHandler.class);
     private final ArticleDao articleDao;
+    private final CommentDao commentDao;
 
-    public ArticleHandler(ArticleDao articleDao) {
+    public ArticleHandler(ArticleDao articleDao, final CommentDao commentDao) {
         this.articleDao = articleDao;
+        this.commentDao = commentDao;
     }
 
     @RequestMapping(method = HttpMethod.GET, path = "/article/form")
@@ -56,12 +59,49 @@ public class ArticleHandler {
         final Long id = Long.valueOf(request.queryString().get("id"));
         if (id < 0) throw new IllegalArgumentException("id값이 잘못되었습니다. " + id);
 
+        // 헤더 HTML 작성
+        User user = AuthenticationHolder.getContext();
+        String holderValue = "";
+        String buttonValue = "";
+        if (user == null) {
+            logger.debug("세션이 존재하지 않습니다.");
+            holderValue = "<a class=\"btn btn_contained btn_size_s\" href=\"/login\">로그인</a>";
+            buttonValue = "<a class=\"btn btn_ghost btn_size_s\" href=\"/registration\">회원 가입</a>";
+        } else {
+            holderValue = user.getName() + "님 환영합니다.";
+            buttonValue = "<a class=\"btn btn_ghost btn_size_s\" href=\"/user/logout\">로그아웃</a>";
+        }
+
+        // 게시글 작성
         Article article = articleDao.get(id)
                 .orElseThrow(IllegalArgumentException::new);
 
+        StringBuilder commentBuilder = new StringBuilder();
+        commentDao.findAllByArticleId(article.id())
+            .forEach(comment -> commentBuilder.append("          <li class=\"comment__item\">\n"
+                + "            <div class=\"comment__item__user\">\n"
+                + "              <img class=\"comment__item__user__img\" />\n"
+                + "              <p class=\"comment__item__user__nickname\">\n"
+            ).append(
+                comment.name()
+            ).append(
+                "              </p>\n"
+                + "            </div>\n"
+                + "            <p class=\"comment__item__article\">\n"
+            ).append(
+                comment.content()
+            ).append(
+                "            </p>\n"
+                + "          </li>"
+            ));
+
         return FileHttpResponseCreator.create("/article/article.html", Map.of(
-                "title", article.title(),
-                "content", article.content()
+            "articleId", String.valueOf(article.id()),
+            "title", article.title(),
+            "content", article.content(),
+            "comments", commentBuilder.toString(),
+            "holder", holderValue,
+            "signupOrLogoutButton", buttonValue
         ));
     }
 }

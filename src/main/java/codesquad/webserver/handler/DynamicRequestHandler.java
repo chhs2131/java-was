@@ -36,13 +36,9 @@ public class DynamicRequestHandler implements RouterHandler {
             try {
                 return (HttpResponse) handler.invoke(instances.get(handler.getDeclaringClass()), httpRequest);
             } catch (IllegalAccessException | InvocationTargetException e) {
-                logger.debug("리플렉션 핸들링 에러");
-                e.printStackTrace();
-                return ErrorPageResponseFactory.internalServerError("핸들링 에러 발생");
-            } catch (IllegalArgumentException e) {
-                logger.debug("내부 로직 에러");
-                e.printStackTrace();
-                return ErrorPageResponseFactory.internalServerError(e.getMessage());
+                logger.debug("핸들링 에러");
+                e.getCause().printStackTrace();
+                return ErrorPageResponseFactory.internalServerError("Message: " + e.getCause().getMessage() + " (" + e.getCause().toString() + ")");
             }
         }
 
