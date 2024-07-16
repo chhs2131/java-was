@@ -13,8 +13,8 @@ public class ErrorPageResponseFactory {
         return FileHttpResponseCreator.create(HttpStatus.BAD_REQUEST, BAD_REQUEST_PAGE);
     }
 
-    public static HttpResponse internalServerError(Map<String, String> templateMap) {
-        return FileHttpResponseCreator.create(HttpStatus.INTERNAL_SERVER_ERROR, INTERNAL_SERVER_ERROR_PAGE, templateMap);
+    public static HttpResponse internalServerError(String message) {
+        return FileHttpResponseCreator.create(HttpStatus.INTERNAL_SERVER_ERROR, INTERNAL_SERVER_ERROR_PAGE, Map.of("message", message));
     }
 
     public static HttpResponse notFound() {

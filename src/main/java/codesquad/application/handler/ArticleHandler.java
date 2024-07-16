@@ -13,6 +13,8 @@ import codesquad.webserver.http.type.HttpMethod;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.util.Map;
+
 @Controller
 public class ArticleHandler {
     private static final Logger logger = LoggerFactory.getLogger(ArticleHandler.class);
@@ -47,5 +49,19 @@ public class ArticleHandler {
         articleDao.add(article);
 
         return HttpResponse.found("/", "글쓰기 성공!");
+    }
+
+    @RequestMapping(method = HttpMethod.GET, path = "/article")
+    public HttpResponse get(HttpRequest request) {
+        final Long id = Long.valueOf(request.queryString().get("id"));
+        if (id < 0) throw new IllegalArgumentException("id값이 잘못되었습니다. " + id);
+
+        Article article = articleDao.get(id)
+                .orElseThrow(IllegalArgumentException::new);
+
+        return FileHttpResponseCreator.create("/article/article.html", Map.of(
+                "title", article.title(),
+                "content", article.content()
+        ));
     }
 }

@@ -56,19 +56,22 @@ public class ArticleH2 implements ArticleDao {
 
     @Override
     public Optional<Article> get(long id) {
-        Article article = jdbcConnector.executeQuery("SELECT id, title, content FROM article WHERE id = ?",
+        return jdbcConnector.executeQuery("SELECT id, title, content FROM article WHERE id = ?",
                 List.of(String.valueOf(id)),
                 resultSet -> {
                     try {
-                        String title = resultSet.getString("title");
-                        String content = resultSet.getString("content");
-                        return new Article(id, title, content);
+                        if (resultSet.next()) {
+                            Long articleId = resultSet.getLong("id");
+                            String title = resultSet.getString("title");
+                            String content = resultSet.getString("content");
+                            return Optional.of(new Article(articleId, title, content));
+                        } else {
+                            return Optional.empty();
+                        }
                     } catch (SQLException e) {
                         throw new JdbcException(e);
                     }
                 });
-
-        return Optional.ofNullable(article);
     }
 
     @Override

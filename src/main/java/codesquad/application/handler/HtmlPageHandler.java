@@ -57,7 +57,7 @@ public class HtmlPageHandler {
         // article 제목 목록
         StringBuilder titles = new StringBuilder();
         final List<Article> articles = articleDao.findAll();
-        articles.forEach(article -> titles.append("<p>").append(article.id() + " => " + article.title()).append("</p>"));
+        articles.forEach(article -> titles.append("<p>").append(article.id() + " => " + article.title() + " " + article.content()).append("</p>"));
 
         String resourcePath = "/index.html";
         return create(resourcePath, Map.of("holder", holderValue, "signupOrLogoutButton", buttonValue, "articles", titles.toString()));

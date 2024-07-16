@@ -1,5 +1,6 @@
 package codesquad.webserver.handler;
 
+import codesquad.webserver.file.ErrorPageResponseFactory;
 import codesquad.webserver.http.HttpRequest;
 import codesquad.webserver.http.HttpResponse;
 import java.lang.reflect.InvocationTargetException;
@@ -35,9 +36,13 @@ public class DynamicRequestHandler implements RouterHandler {
             try {
                 return (HttpResponse) handler.invoke(instances.get(handler.getDeclaringClass()), httpRequest);
             } catch (IllegalAccessException | InvocationTargetException e) {
-                e.printStackTrace();
                 logger.debug("리플렉션 핸들링 에러");
-                return HttpResponse.internalServerError("서버에서 에러가 발생했습니다.");
+                e.printStackTrace();
+                return ErrorPageResponseFactory.internalServerError("핸들링 에러 발생");
+            } catch (IllegalArgumentException e) {
+                logger.debug("내부 로직 에러");
+                e.printStackTrace();
+                return ErrorPageResponseFactory.internalServerError(e.getMessage());
             }
         }
 
