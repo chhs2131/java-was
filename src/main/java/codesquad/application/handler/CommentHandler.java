@@ -1,5 +1,6 @@
 package codesquad.application.handler;
 
+import codesquad.application.dao.ArticleDao;
 import codesquad.application.dao.CommentDao;
 import codesquad.application.domain.Comment;
 import codesquad.application.domain.User;
@@ -16,9 +17,11 @@ import org.slf4j.LoggerFactory;
 public class CommentHandler {
     private static final Logger logger = LoggerFactory.getLogger(CommentHandler.class);
     private final CommentDao commentDao;
+    private final ArticleDao articleDao;
 
-    public CommentHandler(CommentDao commentDao) {
+    public CommentHandler(CommentDao commentDao, final ArticleDao articleDao) {
         this.commentDao = commentDao;
+        this.articleDao = articleDao;
     }
 
     @RequestMapping(method = HttpMethod.POST, path = "/article/comment")
@@ -31,6 +34,10 @@ public class CommentHandler {
 
         final Long articleId = Long.parseLong(httpRequest.body().get("articleId"));
         final String content = httpRequest.body().get("content");
+
+        if (!articleDao.existsById(articleId)) {
+            throw new IllegalArgumentException("해당 번호의 게시글은 존재하지 않습니다. 번호: " + articleId);
+        }
 
         final Comment comment = new Comment(null, articleId, context.getNickname(), content);
         commentDao.add(comment);

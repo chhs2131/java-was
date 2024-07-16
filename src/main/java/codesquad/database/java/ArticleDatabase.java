@@ -22,6 +22,11 @@ public class ArticleDatabase implements ArticleDao {
         return Optional.ofNullable(articles.get((int) index));
     }
 
+    @Override
+    public boolean existsById(final long id) {
+        return get(id).isPresent();
+    }
+
     public void clear() {
         articles.clear();
     }

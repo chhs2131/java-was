@@ -9,5 +9,6 @@ public interface ArticleDao {
     void add(Article article);
     List<Article> findAll();
     Optional<Article> get(long id);
+    boolean existsById(long id);
     void clear();
 }

@@ -74,6 +74,11 @@ public class ArticleH2 implements ArticleDao {
     }
 
     @Override
+    public boolean existsById(final long id) {
+        return get(id).isPresent();
+    }
+
+    @Override
     public void clear() {
         jdbcConnector.execute("TRUNCATE TABLE article");
     }
