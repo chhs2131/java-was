@@ -3,7 +3,8 @@ package codesquad.application.handler;
 import codesquad.application.dao.ArticleDao;
 import codesquad.application.domain.Article;
 import codesquad.application.domain.User;
-import codesquad.database.ArticleDatabase;
+import codesquad.database.JdbcConnector;
+import codesquad.database.h2.ArticleH2;
 import codesquad.webserver.annotation.Controller;
 import codesquad.webserver.annotation.RequestMapping;
 import codesquad.webserver.authentication.AuthenticationHolder;
@@ -17,7 +18,7 @@ import org.slf4j.LoggerFactory;
 @Controller
 public class ArticleHandler {
     private static final Logger logger = LoggerFactory.getLogger(ArticleHandler.class);
-    private final ArticleDao articleDao = new ArticleDatabase();
+    private final ArticleDao articleDao = new ArticleH2(new JdbcConnector());
 
     @RequestMapping(method = HttpMethod.GET, path = "/article/form")
     public HttpResponse getForm(HttpRequest request) {
@@ -40,7 +41,7 @@ public class ArticleHandler {
         final String title = request.body().get("title");
         final String content = request.body().get("content");
 
-        final Article article = new Article(title, content);
+        final Article article = new Article(null, title, content);
         articleDao.add(article);
 
         return HttpResponse.found("/", "글쓰기 성공!");

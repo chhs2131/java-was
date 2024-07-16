@@ -5,7 +5,8 @@ import static codesquad.webserver.file.FileHttpResponseCreator.create;
 import codesquad.application.dao.ArticleDao;
 import codesquad.application.domain.Article;
 import codesquad.application.domain.User;
-import codesquad.database.ArticleDatabase;
+import codesquad.database.JdbcConnector;
+import codesquad.database.h2.ArticleH2;
 import codesquad.webserver.annotation.Controller;
 import codesquad.webserver.annotation.RequestMapping;
 import codesquad.webserver.authentication.AuthenticationHolder;
@@ -22,7 +23,7 @@ import java.util.Map;
 @Controller
 public class HtmlPageHandler {
     private static final Logger logger = LoggerFactory.getLogger(HtmlPageHandler.class);
-    private final ArticleDao articleDao = new ArticleDatabase();
+    private final ArticleDao articleDao = new ArticleH2(new JdbcConnector());
 
     @RequestMapping(method = HttpMethod.GET, path = "/registration")
     public HttpResponse getRegistrationPage(HttpRequest httpRequest) {
@@ -54,7 +55,7 @@ public class HtmlPageHandler {
         // article 제목 목록
         StringBuilder titles = new StringBuilder();
         final List<Article> articles = articleDao.findAll();
-        articles.forEach(article -> titles.append(article.title()).append("\n"));
+        articles.forEach(article -> titles.append("<p>").append(article.id() + " => " + article.title()).append("</p>"));
 
         String resourcePath = "/index.html";
         return create(resourcePath, Map.of("holder", holderValue, "signupOrLogoutButton", buttonValue, "articles", titles.toString()));
