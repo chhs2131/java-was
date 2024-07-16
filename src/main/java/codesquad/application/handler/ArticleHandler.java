@@ -1,5 +1,6 @@
 package codesquad.application.handler;
 
+import codesquad.application.dao.ArticleDao;
 import codesquad.application.domain.Article;
 import codesquad.application.domain.User;
 import codesquad.database.ArticleDatabase;
@@ -16,6 +17,7 @@ import org.slf4j.LoggerFactory;
 @Controller
 public class ArticleHandler {
     private static final Logger logger = LoggerFactory.getLogger(ArticleHandler.class);
+    private final ArticleDao articleDao = new ArticleDatabase();
 
     @RequestMapping(method = HttpMethod.GET, path = "/article/form")
     public HttpResponse getForm(HttpRequest request) {
@@ -39,7 +41,7 @@ public class ArticleHandler {
         final String content = request.body().get("content");
 
         final Article article = new Article(title, content);
-        ArticleDatabase.add(article);
+        articleDao.add(article);
 
         return HttpResponse.found("/", "글쓰기 성공!");
     }

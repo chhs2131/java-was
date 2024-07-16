@@ -2,6 +2,8 @@ package codesquad.application;
 
 import static org.junit.jupiter.api.Assertions.*;
 
+import codesquad.application.dao.SessionDao;
+import codesquad.application.dao.UserDao;
 import codesquad.application.handler.LoginHandler;
 import codesquad.application.domain.User;
 import codesquad.database.SessionDatabase;
@@ -23,11 +25,13 @@ import org.junit.jupiter.api.Test;
 
 class LoginHandlerTest {
     private LoginHandler loginHandler = new LoginHandler();
+    private final UserDao userDao = new UserDatabase();
+    private final SessionDao sessionDao = new SessionDatabase();
 
     @BeforeEach
     public void setUp() {
-        UserDatabase.clear();
-        SessionDatabase.clear();
+        userDao.clear();
+        sessionDao.clear();
         AuthenticationHolder.clear();
     }
 
@@ -35,7 +39,7 @@ class LoginHandlerTest {
     @DisplayName("로그인을 성공적으로 수행한다.")
     public void test_login_success() {
         User user = new User("testUser", "testPass", "testNick", "test@example.com");
-        UserDatabase.addUser(user);
+        userDao.add(user);
         Map<String, String> requestBody = new HashMap<>();
         requestBody.put("username", "testUser");
         requestBody.put("password", "testPass");
@@ -67,7 +71,7 @@ class LoginHandlerTest {
     @DisplayName("로그아웃을 성공적으로 수행합니다.")
     public void test_logout_success() {
         User user = new User("testUser", "testPass", "testNick", "test@example.com");
-        UserDatabase.addUser(user);
+        userDao.add(user);
 
         // Assume login process and session creation
         final SessionManager sessionManager = new SessionManager();
@@ -89,7 +93,7 @@ class LoginHandlerTest {
     @DisplayName("세션이 만료된 경우 로그아웃을 실패(401)합니다.")
     public void test_logout_session_expired_failure() {
         User user = new User("testUser", "testPass", "testNick", "test@example.com");
-        UserDatabase.addUser(user);
+        userDao.add(user);
 
         // Assume login process and session creation, then session expiration
         final SessionManager sessionManager = new SessionManager();
@@ -112,7 +116,7 @@ class LoginHandlerTest {
     @DisplayName("해당하는 세션이 없는 경우 로그아웃을 실패(401)합니다.")
     public void test_logout_have_not_session_failure() {
         User user = new User("testUser", "testPass", "testNick", "test@example.com");
-        UserDatabase.addUser(user);
+        userDao.add(user);
 
         String invalidSessionId = "invalid-session-id";
         final HttpHeader cookie = HttpHeader.of("Cookie", "SID=" + invalidSessionId);

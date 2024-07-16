@@ -2,6 +2,7 @@ package codesquad.application.handler;
 
 import static codesquad.webserver.file.FileHttpResponseCreator.create;
 
+import codesquad.application.dao.ArticleDao;
 import codesquad.application.domain.Article;
 import codesquad.application.domain.User;
 import codesquad.database.ArticleDatabase;
@@ -21,6 +22,7 @@ import java.util.Map;
 @Controller
 public class HtmlPageHandler {
     private static final Logger logger = LoggerFactory.getLogger(HtmlPageHandler.class);
+    private final ArticleDao articleDao = new ArticleDatabase();
 
     @RequestMapping(method = HttpMethod.GET, path = "/registration")
     public HttpResponse getRegistrationPage(HttpRequest httpRequest) {
@@ -51,7 +53,7 @@ public class HtmlPageHandler {
 
         // article 제목 목록
         StringBuilder titles = new StringBuilder();
-        final List<Article> articles = ArticleDatabase.getAll();
+        final List<Article> articles = articleDao.findAll();
         articles.forEach(article -> titles.append(article.title()).append("\n"));
 
         String resourcePath = "/index.html";

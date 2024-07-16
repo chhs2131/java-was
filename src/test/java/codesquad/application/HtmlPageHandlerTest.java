@@ -1,8 +1,8 @@
 package codesquad.application;
 
+import codesquad.application.dao.UserDao;
 import codesquad.application.handler.HtmlPageHandler;
 import codesquad.application.domain.User;
-import codesquad.database.SessionDatabase;
 import codesquad.database.UserDatabase;
 import codesquad.webserver.authentication.AuthenticationHolder;
 import codesquad.webserver.http.HttpRequest;
@@ -26,14 +26,17 @@ class HtmlPageHandlerTest {
     private HtmlPageHandler htmlPageHandler = new HtmlPageHandler();
     private SessionManager sessionManager;
     private User testUser;
+    private UserDao userDao;
 
     @BeforeEach
     public void setUp() {
         AuthenticationHolder.clear();
         sessionManager = new SessionManager();
         testUser = new User("testUser", "testPass", "testNick", "test@example.com");
-        UserDatabase.clear();  // UserDatabase 초기화
-        SessionDatabase.clear();
+
+        userDao = new UserDatabase();
+        userDao.clear();  // UserDatabase 초기화
+        sessionManager.clear();
         AuthenticationHolder.clear();  // AuthenticationHolder 초기화
     }
 
@@ -52,7 +55,7 @@ class HtmlPageHandlerTest {
     @DisplayName("로그인된 사용자의 홈페이지 요청을 성공적으로 처리합니다.")
     void testGetHomepageWithLoggedInUser() {
         // UserDatabase에 유저 추가
-        UserDatabase.addUser(testUser);
+        userDao.add(testUser);
 
         // 세션 생성 및 설정
         Session session = sessionManager.createSession(testUser);

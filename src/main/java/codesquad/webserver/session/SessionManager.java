@@ -1,5 +1,6 @@
 package codesquad.webserver.session;
 
+import codesquad.application.dao.SessionDao;
 import codesquad.database.SessionDatabase;
 import codesquad.application.domain.User;
 
@@ -11,9 +12,10 @@ import java.util.UUID;
 
 public class SessionManager {
     private static final int SESSION_MAX_AGE = 3600;
+    private final SessionDao sessionDao = new SessionDatabase();
 
     public Optional<Session> getSession(String sessionId) {
-        return SessionDatabase.getSession(sessionId);
+        return sessionDao.findById(sessionId);
     }
 
     public boolean validSession(String sessionId) {
@@ -35,16 +37,24 @@ public class SessionManager {
         Session session = new Session(sessionId, LocalDateTime.now().plusSeconds(SESSION_MAX_AGE), attributes);
 
         // 디비에 추가
-        SessionDatabase.addSession(session);
+        sessionDao.add(session);
         return session;
     }
 
+    public void addSession(Session session) {
+        sessionDao.add(session);
+    }
+
     public void removeSession(String sessionId) {
-        SessionDatabase.removeSession(sessionId);
+        sessionDao.removeById(sessionId);
     }
 
     public boolean existsSession(String sessionId) {
-        return SessionDatabase.existsSession(sessionId);
+        return sessionDao.existsById(sessionId);
+    }
+
+    public void clear() {
+        sessionDao.clear();
     }
 
     private String createUniqueSessionId() {

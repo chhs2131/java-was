@@ -1,7 +1,6 @@
 package codesquad.webserver.session;
 
 import codesquad.application.domain.User;
-import codesquad.database.SessionDatabase;
 import java.time.LocalDateTime;
 import java.util.HashMap;
 import org.junit.jupiter.api.BeforeEach;
@@ -20,7 +19,7 @@ class SessionManagerTest {
     void setUp() {
         sessionManager = new SessionManager();
         testUser = new User("testUser", "testPass", "testNick", "test@example.com");
-        SessionDatabase.clear(); // Assuming you have a method to clear the session database for testing
+        sessionManager.clear(); // Assuming you have a method to clear the session database for testing
     }
 
     @Test
@@ -53,7 +52,7 @@ class SessionManagerTest {
     @DisplayName("세션이 만료된 경우 유효성 검증에 실패합니다.")
     void testExpiredSession() {
         Session session = new Session("expiredSession", LocalDateTime.now().minusSeconds(1), new HashMap<>());
-        SessionDatabase.addSession(session);
+        sessionManager.addSession(session);
         assertFalse(sessionManager.validSession(session.id()));
     }
 

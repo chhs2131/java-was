@@ -1,5 +1,6 @@
 package codesquad.application.handler;
 
+import codesquad.application.dao.UserDao;
 import codesquad.application.domain.User;
 import codesquad.database.UserDatabase;
 import codesquad.webserver.annotation.RequestMapping;
@@ -21,6 +22,7 @@ import org.slf4j.LoggerFactory;
 public class LoginHandler {
     private static final Logger logger = LoggerFactory.getLogger(LoginHandler.class);
     private static final SessionManager sessionManager = new SessionManager();
+    private final UserDao userDao = new UserDatabase();
 
     @RequestMapping(method = HttpMethod.POST, path = "/user/login")
     public HttpResponse login(HttpRequest httpRequest) {
@@ -28,7 +30,7 @@ public class LoginHandler {
         String password = httpRequest.body().get("password");
 
         try {
-            User user = UserDatabase.getUserByIdAndPassword(name, password);
+            User user = userDao.getUserByIdAndPassword(name, password);
             Session session = sessionManager.createSession(user);
 
             HttpHeader headers = HttpHeader.createRedirection("/");

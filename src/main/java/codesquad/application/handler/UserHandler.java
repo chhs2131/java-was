@@ -2,6 +2,7 @@ package codesquad.application.handler;
 
 import static codesquad.webserver.file.FileHttpResponseCreator.create;
 
+import codesquad.application.dao.UserDao;
 import codesquad.application.domain.User;
 import codesquad.database.UserDatabase;
 import codesquad.webserver.annotation.Controller;
@@ -19,6 +20,7 @@ import java.util.Map;
 @Controller
 public class UserHandler {
     private static final Logger logger = LoggerFactory.getLogger(UserHandler.class);
+    private final UserDao userDao = new UserDatabase();
 
     @RequestMapping(method = HttpMethod.GET, path = "/user/list")
     public HttpResponse getUserList(HttpRequest httpRequest) {
@@ -32,7 +34,7 @@ public class UserHandler {
         }
 
         // HTML 값 생성
-        List<User> users = UserDatabase.findAll();
+        List<User> users = userDao.findAll();
         StringBuilder sb = new StringBuilder();
         users.forEach(user -> {
             sb.append("<tr>");
@@ -55,7 +57,7 @@ public class UserHandler {
         String email = httpRequest.body().get("email");
 
         final User user = new User(name, password, nickname, email);
-        UserDatabase.addUser(user);
+        userDao.add(user);
         logger.debug("회원가입을 완료했습니다. {}", user);
         return HttpResponse.found("/", "유저가 생성되었습니다.");
     }
