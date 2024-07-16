@@ -6,8 +6,9 @@ import codesquad.application.dao.SessionDao;
 import codesquad.application.dao.UserDao;
 import codesquad.application.handler.LoginHandler;
 import codesquad.application.domain.User;
+import codesquad.database.JdbcConnector;
+import codesquad.database.h2.UserH2;
 import codesquad.database.java.SessionDatabase;
-import codesquad.database.java.UserDatabase;
 import codesquad.webserver.authentication.AuthenticationHolder;
 import codesquad.webserver.http.HttpRequest;
 import codesquad.webserver.http.HttpResponse;
@@ -25,7 +26,7 @@ import org.junit.jupiter.api.Test;
 
 class LoginHandlerTest {
     private LoginHandler loginHandler = new LoginHandler();
-    private final UserDao userDao = new UserDatabase();
+    private final UserDao userDao = new UserH2(new JdbcConnector());
     private final SessionDao sessionDao = new SessionDatabase();
 
     @BeforeEach

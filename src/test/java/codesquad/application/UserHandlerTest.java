@@ -5,7 +5,8 @@ import static org.junit.jupiter.api.Assertions.*;
 import codesquad.application.dao.UserDao;
 import codesquad.application.handler.UserHandler;
 import codesquad.application.domain.User;
-import codesquad.database.java.UserDatabase;
+import codesquad.database.JdbcConnector;
+import codesquad.database.h2.UserH2;
 import codesquad.webserver.authentication.AuthenticationHolder;
 import codesquad.webserver.http.HttpRequest;
 import codesquad.webserver.http.HttpResponse;
@@ -34,7 +35,7 @@ class UserHandlerTest {
         sessionManager = new SessionManager();
         testUser = new User("testUser", "testPass", "testNick", "test@example.com");
 
-        userDao = new UserDatabase();
+        userDao = new UserH2(new JdbcConnector());
         userDao.clear();  // UserDatabase 초기화
         sessionManager.clear();
         AuthenticationHolder.clear();  // AuthenticationHolder 초기화
@@ -58,15 +59,15 @@ class UserHandlerTest {
     }
 
     @Test
-    @DisplayName("유저 생성에 필요한 값이 부족한 경우 BAD_REQUEST를 응답합니다.")
+    @DisplayName("유저 생성에 필요한 값이 부족한 경우 IllegalArgumentException이 발생합니다.")
     public void test_create_user_missing_fields() {
         Map<String, String> requestBody = new HashMap<>();
         requestBody.put("name", "testUser");  // password, nickname, email fields 없음
         HttpRequest httpRequest = new HttpRequest(HttpMethod.POST, "/user/create", new HashMap<>(), HttpProtocol.HTTP_1_1, HttpHeader.createEmpty(), requestBody);
 
-        HttpResponse response = userHandler.createUser(httpRequest);
-
-        assertEquals(HttpStatus.FOUND, response.status());
+        assertThrows(IllegalArgumentException.class, () -> {
+            userHandler.createUser(httpRequest);
+        });
     }
 
     @Test

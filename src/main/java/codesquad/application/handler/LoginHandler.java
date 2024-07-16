@@ -2,7 +2,8 @@ package codesquad.application.handler;
 
 import codesquad.application.dao.UserDao;
 import codesquad.application.domain.User;
-import codesquad.database.java.UserDatabase;
+import codesquad.database.JdbcConnector;
+import codesquad.database.h2.UserH2;
 import codesquad.webserver.annotation.RequestMapping;
 import codesquad.webserver.authentication.AuthenticationHolder;
 import codesquad.webserver.annotation.Controller;
@@ -22,7 +23,7 @@ import org.slf4j.LoggerFactory;
 public class LoginHandler {
     private static final Logger logger = LoggerFactory.getLogger(LoginHandler.class);
     private static final SessionManager sessionManager = new SessionManager();
-    private final UserDao userDao = new UserDatabase();
+    private final UserDao userDao = new UserH2(new JdbcConnector());
 
     @RequestMapping(method = HttpMethod.POST, path = "/user/login")
     public HttpResponse login(HttpRequest httpRequest) {
@@ -30,7 +31,7 @@ public class LoginHandler {
         String password = httpRequest.body().get("password");
 
         try {
-            User user = userDao.getUserByIdAndPassword(name, password);
+            User user = userDao.getUserByIdAndPassword(name, password).orElseThrow(IllegalArgumentException::new);
             Session session = sessionManager.createSession(user);
 
             HttpHeader headers = HttpHeader.createRedirection("/");

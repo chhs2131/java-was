@@ -9,6 +9,10 @@ public class User {
     private final String nickname;
 
     public User(final String name, final String password, final String nickname, final String email) {
+        if (name == null || password == null || nickname == null || email == null) {
+            throw new IllegalArgumentException("User 생성시 null이 존재하면 안됩니다.");
+        }
+
         this.name = name;
         this.password = password;
         this.nickname = nickname;

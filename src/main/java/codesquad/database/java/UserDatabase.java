@@ -5,6 +5,7 @@ import codesquad.application.domain.User;
 
 import java.util.Collections;
 import java.util.List;
+import java.util.Optional;
 import java.util.concurrent.CopyOnWriteArrayList;
 
 public class UserDatabase implements UserDao {
@@ -21,11 +22,10 @@ public class UserDatabase implements UserDao {
         return Collections.unmodifiableList(userDb);
     }
 
-    public User getUserByIdAndPassword(String userId, String password) {
+    public Optional<User> getUserByIdAndPassword(String userId, String password) {
         return userDb.stream()
                 .filter(user -> user.getName().equals(userId) && user.getPassword().equals(password))
-                .findFirst()
-                .orElseThrow(IllegalArgumentException::new);
+                .findFirst();
     }
 
     public void clear() {
