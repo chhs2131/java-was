@@ -8,4 +8,5 @@ public interface CommentDao {
     void add(Comment comment);
     Optional<Comment> findById(long id);
     List<Comment> findAllByArticleId(long articleId);
+    void clear();
 }

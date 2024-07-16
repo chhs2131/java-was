@@ -75,4 +75,10 @@ public class CommentH2 implements CommentDao {
             return comments;
             });
     }
+
+    @Override
+    public void clear() {
+        jdbcConnector.execute("TRUNCATE TABLE comment");
+        jdbcConnector.execute("ALTER TABLE comment ALTER COLUMN id RESTART WITH 1");  // TODO 초기화 왜 안되냐..?
+    }
 }
