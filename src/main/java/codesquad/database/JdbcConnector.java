@@ -1,24 +1,27 @@
 package codesquad.database;
 
+import codesquad.webserver.annotation.Component;
+
 import java.sql.*;
 import java.util.List;
 import java.util.function.Function;
 
+@Component
 public class JdbcConnector {
-    private static final String JDBC_URL = "jdbc:h2:mem:was;DB_CLOSE_DELAY=-1";  // 메모리 DB 삭제하지 않음
-    private static final String JDBC_USER = "sa";
-    private static final String JDBC_PASSWORD = "";
+    private final String jdbcUrl;
+    private final String jdbcUser;
+    private final String jdbcPassword;
 
-    public JdbcConnector() {}
-
-    public JdbcConnector(String url, String id, String password) {
-        // TODO 관련 정보를 외부에서 주입받기
+    public JdbcConnector(JdbcProperty jdbcProperty) {
+        this.jdbcUrl = jdbcProperty.getJdbcUrl();
+        this.jdbcUser = jdbcProperty.getJdbcUser();
+        this.jdbcPassword = jdbcProperty.getJdbcPassword();
     }
 
     public void execute(String query) {
         try (
-        Connection connection = DriverManager.getConnection(JDBC_URL, JDBC_USER, JDBC_PASSWORD);
-        Statement statement = connection.createStatement();
+                Connection connection = DriverManager.getConnection(jdbcUrl, jdbcUser, jdbcPassword);
+                Statement statement = connection.createStatement()
         ) {
             statement.execute(query);
         } catch (SQLException e) {
@@ -28,7 +31,7 @@ public class JdbcConnector {
 
     public void execute(String query, List<String> values) {
         try (
-                Connection connection = DriverManager.getConnection(JDBC_URL, JDBC_USER, JDBC_PASSWORD);
+                Connection connection = DriverManager.getConnection(jdbcUrl, jdbcUser, jdbcPassword);
                 PreparedStatement preparedStatement = connection.prepareStatement(query)
         ) {
             for (int i = 0; i < values.size(); i++) {
@@ -42,7 +45,7 @@ public class JdbcConnector {
 
     public <T> T executeQuery(String query, Function<ResultSet, T> mapper) {
         try (
-                Connection connection = DriverManager.getConnection(JDBC_URL, JDBC_USER, JDBC_PASSWORD);
+                Connection connection = DriverManager.getConnection(jdbcUrl, jdbcUser, jdbcPassword);
                 Statement statement = connection.createStatement();
                 ResultSet resultSet = statement.executeQuery(query);
         ) {
@@ -54,7 +57,7 @@ public class JdbcConnector {
 
     public <T> T executeQuery(String query, List<String> values, Function<ResultSet, T> mapper) {
         try (
-                Connection connection = DriverManager.getConnection(JDBC_URL, JDBC_USER, JDBC_PASSWORD);
+                Connection connection = DriverManager.getConnection(jdbcUrl, jdbcUser, jdbcPassword);
                 PreparedStatement preparedStatement = connection.prepareStatement(query);
         ) {
             for (int i = 0; i < values.size(); i++) {

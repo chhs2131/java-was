@@ -3,8 +3,6 @@ package codesquad.application.handler;
 import codesquad.application.dao.ArticleDao;
 import codesquad.application.domain.Article;
 import codesquad.application.domain.User;
-import codesquad.database.JdbcConnector;
-import codesquad.database.h2.ArticleH2;
 import codesquad.webserver.annotation.Controller;
 import codesquad.webserver.annotation.RequestMapping;
 import codesquad.webserver.authentication.AuthenticationHolder;
@@ -18,7 +16,11 @@ import org.slf4j.LoggerFactory;
 @Controller
 public class ArticleHandler {
     private static final Logger logger = LoggerFactory.getLogger(ArticleHandler.class);
-    private final ArticleDao articleDao = new ArticleH2(new JdbcConnector());
+    private final ArticleDao articleDao;
+
+    public ArticleHandler(ArticleDao articleDao) {
+        this.articleDao = articleDao;
+    }
 
     @RequestMapping(method = HttpMethod.GET, path = "/article/form")
     public HttpResponse getForm(HttpRequest request) {

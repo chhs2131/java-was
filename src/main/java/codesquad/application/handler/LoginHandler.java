@@ -2,8 +2,6 @@ package codesquad.application.handler;
 
 import codesquad.application.dao.UserDao;
 import codesquad.application.domain.User;
-import codesquad.database.JdbcConnector;
-import codesquad.database.h2.UserH2;
 import codesquad.webserver.annotation.RequestMapping;
 import codesquad.webserver.authentication.AuthenticationHolder;
 import codesquad.webserver.annotation.Controller;
@@ -23,7 +21,11 @@ import org.slf4j.LoggerFactory;
 public class LoginHandler {
     private static final Logger logger = LoggerFactory.getLogger(LoginHandler.class);
     private static final SessionManager sessionManager = new SessionManager();
-    private final UserDao userDao = new UserH2(new JdbcConnector());
+    private final UserDao userDao;
+
+    public LoginHandler(UserDao userDao) {
+        this.userDao = userDao;
+    }
 
     @RequestMapping(method = HttpMethod.POST, path = "/user/login")
     public HttpResponse login(HttpRequest httpRequest) {

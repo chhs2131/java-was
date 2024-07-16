@@ -31,9 +31,11 @@ public class DynamicRequestHandler implements RouterHandler {
 
         Method handler = requestMap.get(handlerPath);
         if (handler != null) {
+            logger.debug("{}의 {}을 실행합니다.", handler.getDeclaringClass().getName(), handler.getName());
             try {
                 return (HttpResponse) handler.invoke(instances.get(handler.getDeclaringClass()), httpRequest);
             } catch (IllegalAccessException | InvocationTargetException e) {
+                e.printStackTrace();
                 logger.debug("리플렉션 핸들링 에러");
                 return HttpResponse.internalServerError("서버에서 에러가 발생했습니다.");
             }

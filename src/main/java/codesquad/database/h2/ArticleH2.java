@@ -4,12 +4,14 @@ import codesquad.application.dao.ArticleDao;
 import codesquad.application.domain.Article;
 import codesquad.database.JdbcConnector;
 import codesquad.database.JdbcException;
+import codesquad.webserver.annotation.Repository;
 
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
+@Repository
 public class ArticleH2 implements ArticleDao {
     private final JdbcConnector jdbcConnector;
 

@@ -5,8 +5,6 @@ import static codesquad.webserver.file.FileHttpResponseCreator.create;
 import codesquad.application.dao.ArticleDao;
 import codesquad.application.domain.Article;
 import codesquad.application.domain.User;
-import codesquad.database.JdbcConnector;
-import codesquad.database.h2.ArticleH2;
 import codesquad.webserver.annotation.Controller;
 import codesquad.webserver.annotation.RequestMapping;
 import codesquad.webserver.authentication.AuthenticationHolder;
@@ -23,7 +21,11 @@ import java.util.Map;
 @Controller
 public class HtmlPageHandler {
     private static final Logger logger = LoggerFactory.getLogger(HtmlPageHandler.class);
-    private final ArticleDao articleDao = new ArticleH2(new JdbcConnector());
+    private final ArticleDao articleDao;
+
+    public HtmlPageHandler(ArticleDao articleDao) {
+        this.articleDao = articleDao;
+    }
 
     @RequestMapping(method = HttpMethod.GET, path = "/registration")
     public HttpResponse getRegistrationPage(HttpRequest httpRequest) {

@@ -31,9 +31,6 @@ public record HttpTask(Socket clientSocket, RequestHandler requestHandler) imple
             String message = socketReader.read();
 
             HttpRequest request = HttpRequestParser.parse(message);
-            logger.debug("HTTP Request: {} {} {}", request.method(), request.path(), request.protocol());
-            logger.debug("HTTP Headers: size: {}", request.headers().size());
-            logger.debug("HTTP Body: {}", request.body());
 
             // TODO Filter 묶음을 만들고 그곳에 사용할 필터들을 등록한뒤 처리할 것
             final SessionFilter sessionFilter = new SessionFilter();

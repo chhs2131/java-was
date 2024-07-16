@@ -4,8 +4,6 @@ import static codesquad.webserver.file.FileHttpResponseCreator.create;
 
 import codesquad.application.dao.UserDao;
 import codesquad.application.domain.User;
-import codesquad.database.JdbcConnector;
-import codesquad.database.h2.UserH2;
 import codesquad.webserver.annotation.Controller;
 import codesquad.webserver.annotation.RequestMapping;
 import codesquad.webserver.authentication.AuthenticationHolder;
@@ -21,7 +19,11 @@ import java.util.Map;
 @Controller
 public class UserHandler {
     private static final Logger logger = LoggerFactory.getLogger(UserHandler.class);
-    private final UserDao userDao = new UserH2(new JdbcConnector());
+    private final UserDao userDao;
+
+    public UserHandler(UserDao userDao) {
+        this.userDao = userDao;
+    }
 
     @RequestMapping(method = HttpMethod.GET, path = "/user/list")
     public HttpResponse getUserList(HttpRequest httpRequest) {

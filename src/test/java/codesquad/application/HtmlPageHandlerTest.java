@@ -3,6 +3,9 @@ package codesquad.application;
 import codesquad.application.dao.UserDao;
 import codesquad.application.handler.HtmlPageHandler;
 import codesquad.application.domain.User;
+import codesquad.database.JdbcConnector;
+import codesquad.database.JdbcProperty;
+import codesquad.database.h2.ArticleH2;
 import codesquad.database.java.UserDatabase;
 import codesquad.webserver.authentication.AuthenticationHolder;
 import codesquad.webserver.http.HttpRequest;
@@ -23,7 +26,7 @@ import java.util.Map;
 import static org.junit.jupiter.api.Assertions.*;
 
 class HtmlPageHandlerTest {
-    private HtmlPageHandler htmlPageHandler = new HtmlPageHandler();
+    private HtmlPageHandler htmlPageHandler;
     private SessionManager sessionManager;
     private User testUser;
     private UserDao userDao;
@@ -34,6 +37,7 @@ class HtmlPageHandlerTest {
         sessionManager = new SessionManager();
         testUser = new User("testUser", "testPass", "testNick", "test@example.com");
 
+        htmlPageHandler = new HtmlPageHandler(new ArticleH2(new JdbcConnector(new JdbcProperty())));
         userDao = new UserDatabase();
         userDao.clear();  // UserDatabase 초기화
         sessionManager.clear();

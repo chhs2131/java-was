@@ -9,7 +9,7 @@ public class Main {
 
     public static void main(String[] args) throws IOException, ClassNotFoundException {
         WebServer webServer = new WebServer();
-        webServer.init(PORT, "codesquad.application");
+        webServer.init(PORT, "codesquad");
         webServer.run();
     }
 }

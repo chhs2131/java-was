@@ -6,6 +6,7 @@ import codesquad.application.dao.UserDao;
 import codesquad.application.handler.UserHandler;
 import codesquad.application.domain.User;
 import codesquad.database.JdbcConnector;
+import codesquad.database.JdbcProperty;
 import codesquad.database.h2.UserH2;
 import codesquad.webserver.authentication.AuthenticationHolder;
 import codesquad.webserver.http.HttpRequest;
@@ -24,7 +25,7 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
 class UserHandlerTest {
-    private UserHandler userHandler = new UserHandler();
+    private UserHandler userHandler;
     private SessionManager sessionManager;
     private User testUser;
     private UserDao userDao;
@@ -35,7 +36,8 @@ class UserHandlerTest {
         sessionManager = new SessionManager();
         testUser = new User("testUser", "testPass", "testNick", "test@example.com");
 
-        userDao = new UserH2(new JdbcConnector());
+        userDao = new UserH2(new JdbcConnector(new JdbcProperty()));
+        userHandler = new UserHandler(userDao);
         userDao.clear();  // UserDatabase 초기화
         sessionManager.clear();
         AuthenticationHolder.clear();  // AuthenticationHolder 초기화
