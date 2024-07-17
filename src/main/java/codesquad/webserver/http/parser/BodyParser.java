@@ -9,7 +9,11 @@ public class BodyParser {
         return extractBody(lines, contentLength);
     }
 
-    public static Map<String, String> parseFormBody(String[] lines, int contentLength) {
+    public static Map<String, String> parseFormMultiPart(String[] lines, int contentLength) {
+        throw new UnsupportedOperationException();
+    }
+
+    public static Map<String, String> pasreFormXwww(String[] lines, int contentLength) {
         String body = extractBody(lines, contentLength);
         return KeyValueParser.parseQuertString(body);
     }

@@ -1,6 +1,7 @@
 package codesquad.webserver.http.parser;
 
 import codesquad.webserver.http.HttpRequest;
+import codesquad.webserver.http.type.FormEnctype;
 import codesquad.webserver.http.type.HttpHeader;
 import codesquad.webserver.http.type.StartLine;
 
@@ -19,11 +20,11 @@ public class HttpRequestParser {
         // Body
         int contentLength = getContentLength(headers);
         Map<String, String> body = new HashMap<>();
-        if (isFormUrlencoded(headers)) {
-            body = BodyParser.parseFormBody(lines, contentLength);
-        } else {
-            String rawBody = BodyParser.parse(lines, contentLength);
-            body.put("raw", rawBody);
+        switch (getFormEnctype(headers)) {
+            case X_WWW_FORM_URLENCODED -> body = BodyParser.pasreFormXwww(lines, contentLength);
+            case MULTIPART_FORM_DATA -> body = BodyParser.parseFormMultiPart(lines, contentLength);
+            case TEXT_PLAIN -> body.put("raw", BodyParser.parse(lines, contentLength));
+            case NOT_FORM_DATA -> body.put("raw", BodyParser.parse(lines, contentLength));
         }
 
         return new HttpRequest(
@@ -43,10 +44,10 @@ public class HttpRequestParser {
         return contentLength;
     }
 
-    private static boolean isFormUrlencoded(HttpHeader headers) {
+    private static FormEnctype getFormEnctype(HttpHeader headers) {
         if (!headers.contains("Content-Type")) {
-            return false;
+            return FormEnctype.NOT_FORM_DATA;
         }
-        return headers.get("Content-Type").equals("application/x-www-form-urlencoded");
+        return FormEnctype.from(headers.get("Content-Type"));
     }
 }
