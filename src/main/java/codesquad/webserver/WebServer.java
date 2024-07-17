@@ -1,6 +1,7 @@
 package codesquad.webserver;
 
 import codesquad.webserver.handler.HandlerPath;
+import codesquad.webserver.handler.StorageFileHandler;
 import codesquad.webserver.util.AnnotationScanner;
 import codesquad.webserver.handler.DynamicRequestHandler;
 import codesquad.webserver.handler.RouterHandler;
@@ -27,8 +28,11 @@ public class WebServer {
     public void init(int port, String basePackage) throws IOException, ClassNotFoundException {
         logger.debug("Listening for connection on port {} ....", port);
         serverSocket = new ServerSocket(port);
-        RouterHandler dynamicHandler = getDynamicHandler(basePackage);
-        requestHandler = new RequestHandler(List.of(dynamicHandler, new StaticRequestHandler()));
+        requestHandler = new RequestHandler(List.of(
+            getDynamicHandler(basePackage),
+            new StorageFileHandler(),
+            new StaticRequestHandler()
+        ));
         httpThreadPool = new HttpThreadPool(Executors.newFixedThreadPool(THREAD_POOL_SIZE));
     }
 

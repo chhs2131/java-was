@@ -49,10 +49,10 @@ class LoginHandlerTest {
 
         HttpResponse response = loginHandler.login(httpRequest);
 
-        assertEquals(HttpStatus.FOUND, response.status());
-        assertEquals("/", response.headers().get("Location"));
-        assertTrue(response.headers().contains("Set-Cookie"));
-        assertEquals("로그인 완료!", response.body());
+        assertEquals(HttpStatus.FOUND, response.getStatus());
+        assertEquals("/", response.getHeaders().get("Location"));
+        assertTrue(response.getHeaders().contains("Set-Cookie"));
+        assertEquals("로그인 완료!", response.getBody());
     }
 
     @Test
@@ -65,8 +65,8 @@ class LoginHandlerTest {
 
         HttpResponse response = loginHandler.login(httpRequest);
 
-        assertEquals(HttpStatus.FOUND, response.status());
-        assertEquals("/user/login_failed.html", response.headers().get("Location"));
+        assertEquals(HttpStatus.FOUND, response.getStatus());
+        assertEquals("/user/login_failed.html", response.getHeaders().get("Location"));
     }
 
     @Test
@@ -86,8 +86,8 @@ class LoginHandlerTest {
 
         HttpResponse response = loginHandler.logout(httpRequest);
 
-        assertEquals(HttpStatus.FOUND, response.status());
-        assertEquals("/", response.headers().get("Location"));
+        assertEquals(HttpStatus.FOUND, response.getStatus());
+        assertEquals("/", response.getHeaders().get("Location"));
         assertFalse(sessionManager.validSession(sessionId));
     }
 
@@ -110,8 +110,8 @@ class LoginHandlerTest {
 
         HttpResponse response = loginHandler.logout(httpRequest);
 
-        assertEquals(HttpStatus.UNAUTHORIZED, response.status());
-        assertEquals("세션이 존재하지 않습니다.", response.body());
+        assertEquals(HttpStatus.UNAUTHORIZED, response.getStatus());
+        assertEquals("세션이 존재하지 않습니다.", response.getBody());
     }
 
     @Test
@@ -126,7 +126,7 @@ class LoginHandlerTest {
 
         HttpResponse response = loginHandler.logout(httpRequest);
 
-        assertEquals(HttpStatus.UNAUTHORIZED, response.status());
-        assertEquals("세션이 존재하지 않습니다.", response.body());
+        assertEquals(HttpStatus.UNAUTHORIZED, response.getStatus());
+        assertEquals("세션이 존재하지 않습니다.", response.getBody());
     }
 }

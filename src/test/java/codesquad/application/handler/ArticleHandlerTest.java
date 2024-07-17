@@ -46,14 +46,14 @@ class ArticleHandlerTest {
     public void testGetFormWithAuthenticatedUser() {
         AuthenticationHolder.setContext(new User("testUser", "password", "Test User", "email@email.com"));
         HttpResponse response = articleHandler.getForm(null);
-        assertEquals(HttpStatus.OK, response.status());
+        assertEquals(HttpStatus.OK, response.getStatus());
     }
 
     @Test
     @DisplayName("인증 정보가 없다면 글쓰기 페이지로 접근할 수 없다. (FOUND)")
     public void testGetFormWithoutAuthenticatedUser() {
         HttpResponse response = articleHandler.getForm(null);
-        assertEquals(HttpStatus.FOUND, response.status());
+        assertEquals(HttpStatus.FOUND, response.getStatus());
     }
 
     @Test
@@ -67,12 +67,12 @@ class ArticleHandlerTest {
             Map.of(),
             HttpProtocol.HTTP_1_1,
             HttpHeader.createEmpty(),
-            Map.of("title", "제목입니다", "content", "글 내용입니다")
+            Map.of("title", "제목입니다", "content", "글 내용입니다", "image", "helloworld")
         );
 
         HttpResponse response = articleHandler.writeArticle(request);
-        assertEquals(HttpStatus.FOUND, response.status());
-        assertEquals("글쓰기 성공!", response.body());
+        assertEquals(HttpStatus.FOUND, response.getStatus());
+        assertEquals("글쓰기 성공!", response.getBody());
         Article addedArticle = articleDao.get(1L).orElseThrow();
         assertEquals("제목입니다", addedArticle.title());
         assertEquals("글 내용입니다", addedArticle.content());
@@ -91,8 +91,8 @@ class ArticleHandlerTest {
         );
 
         HttpResponse response = articleHandler.writeArticle(request);
-        assertEquals(HttpStatus.FOUND, response.status());
-        assertEquals("/user/login_failed.html", response.headers().get("Location"));
+        assertEquals(HttpStatus.FOUND, response.getStatus());
+        assertEquals("/user/login_failed.html", response.getHeaders().get("Location"));
     }
 
     // TODO

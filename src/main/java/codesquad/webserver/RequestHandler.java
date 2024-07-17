@@ -26,6 +26,7 @@ public class RequestHandler {
     }
 
     private HttpResponse createBadRequest() {
+        // TODO 이게 왜 자꾸 실행도지?
         return ErrorPageResponseFactory.badRequest();
     }
 }

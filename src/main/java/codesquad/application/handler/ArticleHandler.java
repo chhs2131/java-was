@@ -47,8 +47,9 @@ public class ArticleHandler {
 
         final String title = request.body().get("title");
         final String content = request.body().get("content");
+        final String imagePath = request.body().get("image");
 
-        final Article article = new Article(null, title, content);
+        final Article article = new Article(null, title, content, imagePath);
         articleDao.add(article);
 
         return HttpResponse.found("/", "글쓰기 성공!");
@@ -99,6 +100,8 @@ public class ArticleHandler {
             "articleId", String.valueOf(article.id()),
             "title", article.title(),
             "content", article.content(),
+            "imagePath", article.imagePath(),
+//            "imagePath", OnlineFileManager.getRelativePath(article.imagePath()),
             "comments", commentBuilder.toString(),
             "holder", holderValue,
             "signupOrLogoutButton", buttonValue

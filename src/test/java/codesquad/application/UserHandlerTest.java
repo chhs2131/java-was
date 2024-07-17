@@ -55,9 +55,9 @@ class UserHandlerTest {
 
         HttpResponse response = userHandler.createUser(httpRequest);
 
-        assertEquals(HttpStatus.FOUND, response.status());
-        assertEquals("/", response.headers().get("Location"));
-        assertEquals("유저가 생성되었습니다.", response.body());
+        assertEquals(HttpStatus.FOUND, response.getStatus());
+        assertEquals("/", response.getHeaders().get("Location"));
+        assertEquals("유저가 생성되었습니다.", response.getBody());
     }
 
     @Test
@@ -89,10 +89,10 @@ class UserHandlerTest {
 
         HttpResponse response = userHandler.getUserList(httpRequest);
 
-        assertEquals(HttpStatus.OK, response.status());
-        assertTrue(response.body().contains(testUser.getName()));
-        assertTrue(response.body().contains(testUser.getEmail()));
-        assertTrue(response.body().contains(testUser.getNickname()));
+        assertEquals(HttpStatus.OK, response.getStatus());
+        assertTrue(response.getBody().contains(testUser.getName()));
+        assertTrue(response.getBody().contains(testUser.getEmail()));
+        assertTrue(response.getBody().contains(testUser.getNickname()));
     }
 
     @Test
@@ -102,7 +102,7 @@ class UserHandlerTest {
 
         HttpResponse response = userHandler.getUserList(httpRequest);
 
-        assertEquals(HttpStatus.FOUND, response.status());
-        assertEquals("/user/login_failed.html", response.headers().get("Location"));
+        assertEquals(HttpStatus.FOUND, response.getStatus());
+        assertEquals("/user/login_failed.html", response.getHeaders().get("Location"));
     }
 }

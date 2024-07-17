@@ -12,6 +12,10 @@ public enum HttpMethod {
     PATCH,
     TRACE;
 
+    public boolean isGet() {
+        return this == GET;
+    }
+
     public static HttpMethod from(String name) {
         return Arrays.stream(HttpMethod.values())
                 .filter(v -> v.name().equals(name))

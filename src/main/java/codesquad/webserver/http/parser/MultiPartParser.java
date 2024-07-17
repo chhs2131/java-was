@@ -1,15 +1,11 @@
 package codesquad.webserver.http.parser;
 
-import java.io.BufferedOutputStream;
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.IOException;
+import codesquad.webserver.file.StorageFileManager;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.UUID;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -147,7 +143,7 @@ public class MultiPartParser {
             if (filename != null) {
                 // This part contains a file
                 String fileExtension = getFileExtension(filename);
-                String filePath = saveFile(Arrays.copyOfRange(part, headerEndIndex + 4, part.length), fileExtension);
+                String filePath = StorageFileManager.saveFile(Arrays.copyOfRange(part, headerEndIndex + 4, part.length), fileExtension);
                 partMap.put(name, filePath);
             } else {
                 // Handle other form data
@@ -166,27 +162,6 @@ public class MultiPartParser {
             return filename.substring(dotIndex);
         }
         return "";
-    }
-
-    private static String saveFile(byte[] content, String fileExtension) {
-        String uploadDir = "uploads/";
-        File dir = new File(uploadDir);
-        if (!dir.exists()) {
-            dir.mkdirs();
-        }
-
-        String fileName = UUID.randomUUID().toString() + fileExtension;
-        String filePath = uploadDir + fileName;
-
-        try (FileOutputStream fos = new FileOutputStream(filePath);
-             BufferedOutputStream bos = new BufferedOutputStream(fos)) {
-            bos.write(content);
-            logger.debug("파일을 저장했습니다. 경로: {}", filePath);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-
-        return filePath;
     }
 
     private static Map<String, String> parseHeaders(String headers) {

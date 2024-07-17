@@ -15,12 +15,12 @@ public class ResponseConverter {
         StringBuilder sb = new StringBuilder();
 
         // StartLine
-        String responseLine = response.protocol() + " " + response.status().getCode() + " " + response.status().getMessage() + "\r\n";
+        String responseLine = response.getProtocol() + " " + response.getStatus().getCode() + " " + response.getStatus().getMessage() + "\r\n";
         sb.append(responseLine);
 
         // Headers
-        if (response.headers() != null) {
-            for (Entry<String, List<String>> entry : response.headers().entrySet()) {
+        if (response.getHeaders() != null) {
+            for (Entry<String, List<String>> entry : response.getHeaders().entrySet()) {
                 for (String value : entry.getValue()) {
                     String header = entry.getKey() + ": " + value + "\r\n";
                     sb.append(header);
@@ -29,15 +29,32 @@ public class ResponseConverter {
         }
 
         // Body
-        if (response.body() != null && !response.body().isEmpty()) {
+        if (response.getBody() != null && !response.getBody().isEmpty()) {
             sb.append("\r\n");
-            sb.append(response.body());
+
+            if (!response.isBytes()) {  // 일반 String Type Body인 경우
+                sb.append(response.getBody());
+            }
         }
 
+        byte[] bytes;
         try {
-            return sb.toString().getBytes("UTF-8");
+            bytes = sb.toString().getBytes("UTF-8");
         } catch (UnsupportedEncodingException e) {
             throw new IllegalArgumentException("UTF-8를 사용할 수 없습니다.", e);
         }
+
+        // Bytes Type Body
+        if (response.isBytes()) {
+            bytes = concatenateByteArrays(bytes, response.getBodyBytes());
+        }
+        return bytes;
+    }
+
+    public static byte[] concatenateByteArrays(byte[] array1, byte[] array2) {
+        byte[] result = new byte[array1.length + array2.length];
+        System.arraycopy(array1, 0, result, 0, array1.length);
+        System.arraycopy(array2, 0, result, array1.length, array2.length);
+        return result;
     }
 }

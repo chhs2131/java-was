@@ -51,8 +51,8 @@ class HtmlPageHandlerTest {
 
         HttpResponse response = htmlPageHandler.getHomepage(httpRequest);
 
-        assertEquals(HttpStatus.OK, response.status());
-        assertTrue(response.body().contains("로그인"));
+        assertEquals(HttpStatus.OK, response.getStatus());
+        assertTrue(response.getBody().contains("로그인"));
     }
 
     @Test
@@ -72,7 +72,7 @@ class HtmlPageHandlerTest {
 
         HttpResponse response = htmlPageHandler.getHomepage(httpRequest);
 
-        assertEquals(HttpStatus.OK, response.status());
-        assertTrue(response.body().contains(testUser.getName() + "님 환영합니다."));
+        assertEquals(HttpStatus.OK, response.getStatus());
+        assertTrue(response.getBody().contains(testUser.getName() + "님 환영합니다."));
     }
 }

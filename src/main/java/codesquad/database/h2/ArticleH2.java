@@ -23,7 +23,8 @@ public class ArticleH2 implements ArticleDao {
                     CREATE TABLE IF NOT EXISTS article (
                         id BIGINT AUTO_INCREMENT PRIMARY KEY,
                         title VARCHAR(255) NOT NULL,
-                        content TEXT NOT NULL
+                        content TEXT NOT NULL,
+                        imagePath VARCHAR(255) NOT NULL
                     );
                 """;
         jdbcConnector.execute(createTableQuery);
@@ -31,13 +32,13 @@ public class ArticleH2 implements ArticleDao {
 
     @Override
     public void add(Article article) {
-        jdbcConnector.execute("INSERT INTO article (title, content) VALUES (?, ?)",
-                List.of(article.title(), article.content()));
+        jdbcConnector.execute("INSERT INTO article (title, content, imagePath) VALUES (?, ?, ?)",
+                List.of(article.title(), article.content(), article.imagePath()));
     }
 
     @Override
     public List<Article> findAll() {
-        return jdbcConnector.executeQuery("SELECT id, title, content FROM article",
+        return jdbcConnector.executeQuery("SELECT id, title, content, imagePath FROM article",
                 resultSet -> {
                     List<Article> articles = new ArrayList<>();
                     try {
@@ -45,7 +46,8 @@ public class ArticleH2 implements ArticleDao {
                             Long id = resultSet.getLong("id");
                             String title = resultSet.getString("title");
                             String content = resultSet.getString("content");
-                            articles.add(new Article(id, title, content));
+                            String imagePath = resultSet.getString("imagePath");
+                            articles.add(new Article(id, title, content, imagePath));
                         }
                     } catch (SQLException e) {
                         throw new JdbcException(e);
@@ -56,7 +58,7 @@ public class ArticleH2 implements ArticleDao {
 
     @Override
     public Optional<Article> get(long id) {
-        return jdbcConnector.executeQuery("SELECT id, title, content FROM article WHERE id = ?",
+        return jdbcConnector.executeQuery("SELECT id, title, content, imagePath FROM article WHERE id = ?",
                 List.of(String.valueOf(id)),
                 resultSet -> {
                     try {
@@ -64,7 +66,8 @@ public class ArticleH2 implements ArticleDao {
                             Long articleId = resultSet.getLong("id");
                             String title = resultSet.getString("title");
                             String content = resultSet.getString("content");
-                            return Optional.of(new Article(articleId, title, content));
+                            String imagePath = resultSet.getString("imagePath");
+                            return Optional.of(new Article(articleId, title, content, imagePath));
                         }
                         return Optional.empty();
                     } catch (SQLException e) {

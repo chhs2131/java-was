@@ -28,7 +28,7 @@ class RequestHandlerTest {
 
         HttpResponse httpResponse = requestHandler.handle(httpRequest);
 
-        assertEquals(HttpStatus.BAD_REQUEST, httpResponse.status());
+        assertEquals(HttpStatus.BAD_REQUEST, httpResponse.getStatus());
     }
 
     @Test
@@ -38,6 +38,6 @@ class RequestHandlerTest {
 
         HttpResponse httpResponse = requestHandler.handle(httpRequest);
 
-        assertEquals(HttpStatus.NOT_FOUND, httpResponse.status());
+        assertEquals(HttpStatus.NOT_FOUND, httpResponse.getStatus());
     }
 }

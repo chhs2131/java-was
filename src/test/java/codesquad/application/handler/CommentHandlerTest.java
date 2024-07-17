@@ -44,7 +44,7 @@ class CommentHandlerTest {
     @DisplayName("게시글에 댓글을 추가한다.")
     public void add_comment() {
         AuthenticationHolder.setContext(createTestUser());
-        Article article = new Article(null, "정상조회제목", "정상조회내용");
+        Article article = new Article(null, "정상조회제목", "정상조회내용", "");
         articleDao.add(article);
 
         final Long id = articleDao.findAll().get(0).id();// TODO DB AUTO_INCREMENT CleanUp이 잘될때 제거..
@@ -58,8 +58,8 @@ class CommentHandlerTest {
         );
         final HttpResponse httpResponse = commentHandler.writeComment(request);
 
-        assertEquals(HttpStatus.FOUND, httpResponse.status());
-        assertThat(httpResponse.headers().get("Location")).startsWith("/article?");
+        assertEquals(HttpStatus.FOUND, httpResponse.getStatus());
+        assertThat(httpResponse.getHeaders().get("Location")).startsWith("/article?");
     }
 
     @Test
@@ -92,8 +92,8 @@ class CommentHandlerTest {
         );
 
         final HttpResponse httpResponse = commentHandler.writeComment(request);
-        assertThat(httpResponse.status()).isEqualTo(HttpStatus.FOUND);
-        assertThat(httpResponse.headers().get("Location")).startsWith("/user/login_failed.html");
+        assertThat(httpResponse.getStatus()).isEqualTo(HttpStatus.FOUND);
+        assertThat(httpResponse.getHeaders().get("Location")).startsWith("/user/login_failed.html");
     }
 
     private User createTestUser() {
