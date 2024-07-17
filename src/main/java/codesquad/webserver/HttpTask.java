@@ -28,8 +28,7 @@ public record HttpTask(Socket clientSocket, RequestHandler requestHandler) imple
         SocketWriter socketWriter = new SocketWriter(clientSocket);
 
         try (clientSocket) {
-            String message = socketReader.read();
-
+            byte[] message = socketReader.readBytes();
             HttpRequest request = HttpRequestParser.parse(message);
 
             // TODO Filter 묶음을 만들고 그곳에 사용할 필터들을 등록한뒤 처리할 것
@@ -44,6 +43,9 @@ public record HttpTask(Socket clientSocket, RequestHandler requestHandler) imple
             e.printStackTrace();
         } catch (IOException e) {
             logger.error("Socket을 close하는 중에 예외가 발생했습니다.");
+            e.printStackTrace();
+        } catch (Exception e) {
+            logger.error("예상치 못한 에러가 발생했습니다.");
             e.printStackTrace();
         }
     }
