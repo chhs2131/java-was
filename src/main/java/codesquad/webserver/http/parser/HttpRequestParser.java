@@ -20,9 +20,10 @@ public class HttpRequestParser {
         // Body
         int contentLength = getContentLength(headers);
         Map<String, String> body = new HashMap<>();
+
         switch (getFormEnctype(headers)) {
             case X_WWW_FORM_URLENCODED -> body = BodyParser.pasreFormXwww(lines, contentLength);
-            case MULTIPART_FORM_DATA -> body = BodyParser.parseFormMultiPart(lines, contentLength);
+            case MULTIPART_FORM_DATA -> body = BodyParser.parseFormMultiPart(lines, contentLength, FormEnctype.getBoundary(headers.get("Content-Type")));
             case TEXT_PLAIN -> body.put("raw", BodyParser.parse(lines, contentLength));
             case NOT_FORM_DATA -> body.put("raw", BodyParser.parse(lines, contentLength));
         }

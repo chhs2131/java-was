@@ -28,7 +28,7 @@ class BodyParserTest {
 
     @Test
     @DisplayName("여러 Form값이 전달되어도 정상 파싱한다.")
-    public void testParseFormBody_multiplePairs() {
+    public void testPasreFormXwww_multiplePairs() {
         String[] lines = {
                 "POST / HTTP/1.1",
                 "Host: example.com",
@@ -38,7 +38,7 @@ class BodyParserTest {
         };
         int contentLength = 35;
 
-        Map<String, String> result = BodyParser.parseFormBody(lines, contentLength);
+        Map<String, String> result = BodyParser.pasreFormXwww(lines, contentLength);
         assertThat(result.get("key1")).isEqualTo("value1");
         assertThat(result.get("key2")).isEqualTo("value2");
         assertThat(result.get("key3")).isEqualTo("value3");

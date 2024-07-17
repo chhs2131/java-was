@@ -14,6 +14,14 @@ public enum FormEnctype {
         this.value = value;
     }
 
+    public String getValue() {
+        return value;
+    }
+
+    public boolean isMultipartForm() {
+        return this == MULTIPART_FORM_DATA;
+    }
+
     public static FormEnctype from(String value) {
         if (value == null) {
             return NOT_FORM_DATA;
@@ -24,7 +32,16 @@ public enum FormEnctype {
                 .orElse(NOT_FORM_DATA);
     }
 
-    public String getValue() {
-        return value;
+    public static String getBoundary(String value) {
+        if (!from(value).isMultipartForm()) {
+            throw new IllegalArgumentException("멀티파트 헤더가 아닙니다. header: " + value);
+        }
+
+        String[] split = value.split("boundary=");
+        if (split.length != 2) {
+            throw new IllegalArgumentException("값을 찾을 수 없습니다. split길이: " + split.length);
+        }
+
+        return "--" + split[1];
     }
 }

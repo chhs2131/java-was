@@ -50,4 +50,23 @@ public class KeyValueParser {
 
         return cookies;
     }
+
+
+    public static Map<String, String> parseMultiPart(String multiPartHeader) {
+        Map<String, String> cookies = new HashMap<>();
+
+        if (multiPartHeader == null || multiPartHeader.isEmpty()) {
+            return cookies;
+        }
+
+        String[] pairs = multiPartHeader.split("; ");
+        for (String pair : pairs) {
+            String[] keyValue = pair.split("[=]|(: )", 2);
+            if (keyValue.length == 2) {
+                cookies.put(keyValue[0].trim(), keyValue[1].trim());
+            }
+        }
+
+        return cookies;
+    }
 }
