@@ -26,6 +26,8 @@ public class WebServer {
     private HttpThreadPool httpThreadPool;
 
     public void init(int port, String basePackage) throws IOException, ClassNotFoundException {
+        long startTime = System.currentTimeMillis(); // 측정 시작 시간
+
         logger.debug("Listening for connection on port {} ....", port);
         serverSocket = new ServerSocket(port);
         requestHandler = new RequestHandler(List.of(
@@ -34,6 +36,10 @@ public class WebServer {
             new StaticRequestHandler()
         ));
         httpThreadPool = new HttpThreadPool(Executors.newFixedThreadPool(THREAD_POOL_SIZE));
+
+        long endTime = System.currentTimeMillis(); // 측정 종료 시간
+        long elapsedTime = endTime - startTime; // 경과 시간 계산
+        logger.debug("서버 동작 준비 완료: {}ms", elapsedTime); // 실행 시간 로깅 혹은 출력
     }
 
     public void run() throws IOException {
