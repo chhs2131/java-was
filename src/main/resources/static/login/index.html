@@ -54,5 +54,25 @@
         </form>
       </div>
     </div>
+    <script>
+      function validateLoginForm() {
+        const username = document.querySelector('input[name="username"]').value;
+        const password = document.querySelector('input[name="password"]').value;
+
+        if (!username || !password) {
+          alert("아이디와 비밀번호를 모두 입력해주세요.");
+          return false;
+        }
+        return true;
+      }
+
+      document.addEventListener("DOMContentLoaded", () => {
+        document.getElementById("login-btn").addEventListener("click", (event) => {
+          if (!validateLoginForm()) {
+            event.preventDefault();
+          }
+        });
+      });
+    </script>
   </body>
 </html>

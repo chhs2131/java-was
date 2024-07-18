@@ -29,7 +29,7 @@ public class CommentHandler {
         final User context = AuthenticationHolder.getContext();
         if (context == null) {
             logger.debug("세션 정보가 없습니다.");
-            return HttpResponse.found("/user/login_failed.html", null);
+            return HttpResponse.found("/login/index.html", null);
         }
 
         final Long articleId = Long.parseLong(httpRequest.body().get("articleId"));

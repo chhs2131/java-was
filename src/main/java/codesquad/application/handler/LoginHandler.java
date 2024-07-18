@@ -5,6 +5,7 @@ import codesquad.application.domain.User;
 import codesquad.webserver.annotation.RequestMapping;
 import codesquad.webserver.authentication.AuthenticationHolder;
 import codesquad.webserver.annotation.Controller;
+import codesquad.webserver.file.FileHttpResponseCreator;
 import codesquad.webserver.http.HttpRequest;
 import codesquad.webserver.http.HttpResponse;
 import codesquad.webserver.http.type.Cookie;
@@ -54,7 +55,7 @@ public class LoginHandler {
         User context = AuthenticationHolder.getContext();
         if (context == null) {
             logger.debug("세션이 존재하지 않습니다. sid:{}", sid);
-            return HttpResponse.unauthorized("세션이 존재하지 않습니다.");  // TODO 추후에 Exception으로 대체하고 상위에서 handle
+            return FileHttpResponseCreator.create(HttpStatus.UNAUTHORIZED, "/user/login_failed.html");
         }
 
         sessionManager.removeSession(sid);

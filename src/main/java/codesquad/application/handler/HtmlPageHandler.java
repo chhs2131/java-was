@@ -47,13 +47,13 @@ public class HtmlPageHandler {
             buttonValue = "<a class=\"btn btn_ghost btn_size_s\" href=\"/registration\">회원 가입</a>";
         } else {
             holderValue = user.getName() + "님 환영합니다.";
-            buttonValue = "<a class=\"btn btn_ghost btn_size_s\" href=\"/user/logout\">로그아웃</a>";
+            buttonValue = "<a class=\"btn btn_ghost btn_size_s\" href=\"/user/logout\">로그아웃</a><li class=\"header__menu__item\"><a class=\"btn btn_contained btn_size_s\" href=\"/user/list\">사용자 목록</a></li>";
         }
 
         // article 제목 목록
         StringBuilder titles = new StringBuilder();
         final List<Article> articles = articleDao.findAll();
-        articles.forEach(article -> titles.append("<div class=\"article\"><a href=\"/article?id=").append(article.id()).append("\">").append(article.title()).append("</a></div>"));
+        articles.stream().sorted((a1, a2) -> Math.toIntExact(a2.id() - a1.id())).forEach(article -> titles.append("<div class=\"article\"><a href=\"/article?id=").append(article.id()).append("\">").append(article.title()).append("</a></div>"));
         if (titles.isEmpty()) {
             titles.append("<div class=\"article\">작성된 글이 없습니다.</div>");
         }

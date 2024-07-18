@@ -76,5 +76,34 @@
     </form>
   </div>
 </div>
+<script>
+  function validateRegistrationForm() {
+    const name = document.getElementById('name').value;
+    const email = document.getElementById('email').value;
+    const nickname = document.getElementById('nickname').value;
+    const password = document.getElementById('password').value;
+    const emailPattern = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,6}$/;
+
+    if (!name || !email || !nickname || !password) {
+      alert("모든 필드를 입력해주세요.");
+      return false;
+    }
+
+    if (!emailPattern.test(email)) {
+      alert("유효한 이메일 주소를 입력해주세요.");
+      return false;
+    }
+
+    return true;
+  }
+
+  document.addEventListener("DOMContentLoaded", () => {
+    document.getElementById("registration-btn").addEventListener("click", (event) => {
+      if (!validateRegistrationForm()) {
+        event.preventDefault();
+      }
+    });
+  });
+</script>
 </body>
 </html>
