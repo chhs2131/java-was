@@ -6,9 +6,14 @@ import codesquad.webserver.handler.HandlerPath;
 import codesquad.webserver.http.type.HttpMethod;
 import codesquad.webserver.util.fake.FakeClass;
 import codesquad.webserver.util.fake.FakeComponent;
+import codesquad.webserver.util.fake.FakeConstructor;
 import codesquad.webserver.util.fake.FakeController;
+import codesquad.webserver.util.fake.FakeImpl1;
+import codesquad.webserver.util.fake.FakeImpl2;
+import codesquad.webserver.util.fake.FakeImplPrimary;
 import codesquad.webserver.util.fake.FakeRepository;
 import java.lang.reflect.Method;
+import java.util.Set;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import java.util.Arrays;
@@ -31,6 +36,7 @@ class AnnotationScannerTest {
         assertTrue(components.contains(FakeController.class));
         assertTrue(components.contains(FakeRepository.class));
         assertTrue(components.contains(FakeComponent.class));
+        assertFalse(components.contains(FakeClass.class));
     }
 
     @Test
@@ -44,9 +50,53 @@ class AnnotationScannerTest {
 
         Map<Class<?>, Object> instances = AnnotationScanner.getInstances(components);
         assertEquals(3, instances.size());
-        assertTrue(instances.containsKey(FakeController.class));
-        assertTrue(instances.containsKey(FakeRepository.class));
-        assertTrue(instances.containsKey(FakeComponent.class));
+        final Set<Class<?>> classes = instances.keySet();
+        assertTrue(classes.contains(FakeController.class));
+        assertTrue(classes.contains(FakeRepository.class));
+        assertTrue(classes.contains(FakeComponent.class));
+    }
+
+    @Test
+    @DisplayName("인터페이스를 구현하는 컴포넌트가 중복 존재하는 경우 예외를 반환합니다.")
+    void testDuplicateComponents() {
+        List<Class<?>> components = Arrays.asList(
+            FakeImpl1.class,
+            FakeImpl2.class
+        );
+
+        assertThrows(IllegalStateException.class, () -> AnnotationScanner.getInstances(components));
+    }
+
+    @Test
+    @DisplayName("인터페이스를 구현하는 컴포넌트가 중복 존재하는 경우 @Primary가 붙은 것을 확인하고 모두 등록합니다.")
+    void testDuplicateComponentsWithPrimary() {
+        List<Class<?>> components = Arrays.asList(
+            FakeImpl1.class,
+            FakeImpl2.class,
+            FakeImplPrimary.class
+        );
+
+        final Map<Class<?>, Object> instances = AnnotationScanner.getInstances(components);
+        final Set<Class<?>> classes = instances.keySet();
+        assertTrue(classes.contains(FakeImplPrimary.class));
+        assertTrue(classes.contains(FakeImpl1.class));
+        assertTrue(classes.contains(FakeImpl2.class));
+    }
+
+    @Test
+    @DisplayName("여러 컴포넌트가 있을때 @Primary 컴포넌트를 주입 받습니다.")
+    void testDuplicateComponentsWithPrimary2() {
+        List<Class<?>> components = Arrays.asList(
+            FakeImpl1.class,
+            FakeImpl2.class,
+            FakeImplPrimary.class,
+            FakeConstructor.class
+        );
+
+        final Map<Class<?>, Object> instances = AnnotationScanner.getInstances(components);
+        FakeConstructor o = (FakeConstructor) instances.get(FakeConstructor.class);
+
+        assertEquals(100, o.getNumber());
     }
 
     @Test
