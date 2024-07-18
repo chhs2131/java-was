@@ -13,6 +13,7 @@ public class ArticleDatabase implements ArticleDao {
     private static final List<Article> articles = new CopyOnWriteArrayList<>();
 
     public void add(Article article) {
+        if (article == null) throw new IllegalArgumentException("Article cannot be null");
         articles.add(article);
     }
 
