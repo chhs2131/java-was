@@ -49,6 +49,10 @@ public class ArticleHandler {
         final String content = request.body().get("content");
         final String imagePath = request.body().get("image");
 
+        if (title == null || content == null || imagePath == null) {
+            throw new IllegalArgumentException("글에 Null값이 들어올 수 없습니다. " + title + " " + content + " " + imagePath);
+        }
+
         final Article article = new Article(null, title, content, imagePath);
         articleDao.add(article);
 
@@ -101,7 +105,6 @@ public class ArticleHandler {
             "title", article.title(),
             "content", article.content(),
             "imagePath", article.imagePath(),
-//            "imagePath", OnlineFileManager.getRelativePath(article.imagePath()),
             "comments", commentBuilder.toString(),
             "holder", holderValue,
             "signupOrLogoutButton", buttonValue
