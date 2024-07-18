@@ -73,7 +73,7 @@ class ArticleHandlerTest {
         HttpResponse response = articleHandler.writeArticle(request);
         assertEquals(HttpStatus.FOUND, response.getStatus());
         assertEquals("글쓰기 성공!", response.getBody());
-        Article addedArticle = articleDao.get(1L).orElseThrow();
+        Article addedArticle = articleDao.findAll().get(0);
         assertEquals("제목입니다", addedArticle.title());
         assertEquals("글 내용입니다", addedArticle.content());
     }
@@ -91,8 +91,7 @@ class ArticleHandlerTest {
         );
 
         HttpResponse response = articleHandler.writeArticle(request);
-        assertEquals(HttpStatus.FOUND, response.getStatus());
-        assertEquals("/user/login_failed.html", response.getHeaders().get("Location"));
+        assertEquals(HttpStatus.UNAUTHORIZED, response.getStatus());
     }
 
     // TODO

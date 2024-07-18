@@ -93,7 +93,7 @@ class CommentHandlerTest {
 
         final HttpResponse httpResponse = commentHandler.writeComment(request);
         assertThat(httpResponse.getStatus()).isEqualTo(HttpStatus.FOUND);
-        assertThat(httpResponse.getHeaders().get("Location")).startsWith("/user/login_failed.html");
+        assertThat(httpResponse.getHeaders().get("Location")).startsWith("/login/index.html");
     }
 
     private User createTestUser() {

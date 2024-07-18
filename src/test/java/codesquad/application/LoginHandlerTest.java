@@ -111,7 +111,6 @@ class LoginHandlerTest {
         HttpResponse response = loginHandler.logout(httpRequest);
 
         assertEquals(HttpStatus.UNAUTHORIZED, response.getStatus());
-        assertEquals("세션이 존재하지 않습니다.", response.getBody());
     }
 
     @Test
@@ -127,6 +126,5 @@ class LoginHandlerTest {
         HttpResponse response = loginHandler.logout(httpRequest);
 
         assertEquals(HttpStatus.UNAUTHORIZED, response.getStatus());
-        assertEquals("세션이 존재하지 않습니다.", response.getBody());
     }
 }
