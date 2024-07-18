@@ -29,7 +29,8 @@ public class ResponseConverter {
         }
 
         // Body
-        if (response.getBody() != null && !response.getBody().isEmpty()) {
+        if ((response.getBodyBytes() != null && response.getBodyBytes().length != 0) ||
+                (response.getBody() != null && !response.getBody().isEmpty())) {
             sb.append("\r\n");
 
             if (!response.isBytes()) {  // 일반 String Type Body인 경우

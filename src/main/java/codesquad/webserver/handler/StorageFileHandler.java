@@ -1,14 +1,10 @@
 package codesquad.webserver.handler;
 
-import codesquad.webserver.file.FileHttpResponseCreator;
 import codesquad.webserver.file.StorageFileManager;
 import codesquad.webserver.http.HttpRequest;
 import codesquad.webserver.http.HttpResponse;
-import codesquad.webserver.http.type.ContentType;
-import codesquad.webserver.http.type.HttpHeader;
-import codesquad.webserver.http.type.HttpMethod;
+import codesquad.webserver.http.type.*;
 import codesquad.webserver.util.StringUtil;
-import java.util.Arrays;
 
 public class StorageFileHandler implements RouterHandler {
     @Override
@@ -25,6 +21,8 @@ public class StorageFileHandler implements RouterHandler {
 
         String extension = StringUtil.getExtension(path);
         final String mimeType = ContentType.from(extension).getMimeType();
-        return HttpResponse.ok(HttpHeader.of("Content-Type", mimeType), Arrays.toString(bytes));
+
+        HttpHeader httpHeader = HttpHeader.of("Content-Type", mimeType, "Content-Length", String.valueOf(bytes.length));
+        return new HttpResponse(HttpProtocol.HTTP_1_1, HttpStatus.OK, httpHeader, bytes);
     }
 }
