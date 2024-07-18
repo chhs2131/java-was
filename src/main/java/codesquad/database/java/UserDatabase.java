@@ -14,9 +14,8 @@ public class UserDatabase implements UserDao {
     private static final List<User> userDb = new CopyOnWriteArrayList<>();
 
     public void add(User user) {
-        if (userDb.contains(user)) {
-            return;
-        }
+        if (user == null) throw new IllegalArgumentException("user is null");
+        if (userDb.contains(user)) return;
         userDb.add(user);
     }
 
