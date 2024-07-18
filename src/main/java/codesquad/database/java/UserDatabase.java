@@ -3,11 +3,13 @@ package codesquad.database.java;
 import codesquad.application.dao.UserDao;
 import codesquad.application.domain.User;
 
+import codesquad.webserver.annotation.Repository;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 import java.util.concurrent.CopyOnWriteArrayList;
 
+@Repository
 public class UserDatabase implements UserDao {
     private static final List<User> userDb = new CopyOnWriteArrayList<>();
 

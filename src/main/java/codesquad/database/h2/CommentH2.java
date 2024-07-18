@@ -4,6 +4,7 @@ import codesquad.application.dao.CommentDao;
 import codesquad.application.domain.Comment;
 import codesquad.database.JdbcConnector;
 import codesquad.database.JdbcException;
+import codesquad.webserver.annotation.Primary;
 import codesquad.webserver.annotation.Repository;
 import java.sql.SQLException;
 import java.util.ArrayList;
@@ -11,6 +12,7 @@ import java.util.List;
 import java.util.Optional;
 
 @Repository
+@Primary
 public class CommentH2 implements CommentDao {
     private final JdbcConnector jdbcConnector;
 

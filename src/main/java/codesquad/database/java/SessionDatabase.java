@@ -1,12 +1,14 @@
 package codesquad.database.java;
 
 import codesquad.application.dao.SessionDao;
+import codesquad.webserver.annotation.Repository;
 import codesquad.webserver.session.Session;
 
 import java.util.Map;
 import java.util.Optional;
 import java.util.concurrent.ConcurrentHashMap;
 
+@Repository
 public class SessionDatabase implements SessionDao {
     private static final Map<String, Session> sessionDb = new ConcurrentHashMap<>();
 

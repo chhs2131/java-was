@@ -4,6 +4,7 @@ import codesquad.application.dao.UserDao;
 import codesquad.application.domain.User;
 import codesquad.database.JdbcConnector;
 import codesquad.database.JdbcException;
+import codesquad.webserver.annotation.Primary;
 import codesquad.webserver.annotation.Repository;
 
 import java.sql.SQLException;
@@ -12,6 +13,7 @@ import java.util.List;
 import java.util.Optional;
 
 @Repository
+@Primary
 public class UserH2 implements UserDao {
     private final JdbcConnector jdbcConnector;
 
