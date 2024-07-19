@@ -53,7 +53,7 @@ public class HtmlPageHandler {
         // article 제목 목록
         StringBuilder titles = new StringBuilder();
         final List<Article> articles = articleDao.findAll();
-        articles.stream().sorted((a1, a2) -> Math.toIntExact(a2.id() - a1.id())).forEach(article -> titles.append("<div class=\"article\"><a href=\"/article?id=").append(article.id()).append("\">").append(article.title()).append("</a></div>"));
+        articles.stream().sorted((a1, a2) -> Math.toIntExact(a2.id() - a1.id())).forEach(article -> titles.append("<a href=\"/article?id=").append(article.id()).append("\"><div class=\"article\">").append(article.title()).append("</div></a>"));
         if (titles.isEmpty()) {
             titles.append("<div class=\"article\">작성된 글이 없습니다.</div>");
         }

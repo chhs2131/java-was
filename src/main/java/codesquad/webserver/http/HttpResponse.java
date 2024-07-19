@@ -3,24 +3,20 @@ package codesquad.webserver.http;
 import codesquad.webserver.http.type.HttpHeader;
 import codesquad.webserver.http.type.HttpProtocol;
 import codesquad.webserver.http.type.HttpStatus;
+import codesquad.webserver.http.type.ResponseBody;
 
 public class HttpResponse {
     private final HttpProtocol protocol;
     private final HttpStatus status;
     private final HttpHeader headers;
-    private final String body;  // TODO ResponseBody 타입으로 합치기
-    private final byte[] bodyBytes;
-    private final boolean isBytes;
+    private final ResponseBody body;
 
     public HttpResponse(final HttpProtocol protocol, final HttpStatus status, final HttpHeader headers,
                         final String body) {
         this.protocol = protocol;
         this.status = status;
         this.headers = headers;
-        this.body = body;
-
-        bodyBytes = new byte[0];
-        isBytes = false;
+        this.body = new ResponseBody(body);
     }
 
     public HttpResponse(final HttpProtocol protocol, final HttpStatus status, final HttpHeader headers,
@@ -28,10 +24,7 @@ public class HttpResponse {
         this.protocol = protocol;
         this.status = status;
         this.headers = headers;
-        this.bodyBytes = bodyBytes;
-
-        body = "";
-        isBytes = true;
+        this.body = new ResponseBody(bodyBytes);
     }
 
     public HttpProtocol getProtocol() {
@@ -47,15 +40,15 @@ public class HttpResponse {
     }
 
     public String getBody() {
-        return body;
+        return body.getBody();
     }
 
     public byte[] getBodyBytes() {
-        return bodyBytes;
+        return body.getBytes();
     }
 
     public boolean isBytes() {
-        return isBytes;
+        return body.isBytes();
     }
 
     public static HttpResponse ok(HttpHeader headers, String body) {
