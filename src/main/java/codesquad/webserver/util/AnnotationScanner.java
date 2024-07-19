@@ -5,17 +5,54 @@ import codesquad.webserver.annotation.Controller;
 import codesquad.webserver.annotation.Primary;
 import codesquad.webserver.annotation.Repository;
 import codesquad.webserver.annotation.RequestMapping;
+import codesquad.webserver.handler.ExecutableHandler;
 import codesquad.webserver.handler.HandlerPath;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
+import java.io.IOException;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.*;
 
 public class AnnotationScanner {
-    private AnnotationScanner() {}
+    private static final Logger logger = LoggerFactory.getLogger(AnnotationScanner.class);
 
-    public static List<Class<?>> getComponents(List<Class<?>> classes) {  // TODO 내부적으로 관리하면 될듯!
+    private List<Class<?>> components;
+    private Map<Class<?>, Object> container;
+    private Map<HandlerPath, Method> requestMap;
+
+    // 지정 패키지 하위 모든 패키지를 읽고, 컴포넌트들을 가져옴 -> 그리고 Container 초기화
+    public void init(String packageName) throws IOException, ClassNotFoundException {
+        List<Class<?>> classesForPackage = ClassFinder.getClassesForPackage(packageName);
+        components = getComponents(classesForPackage);
+        logger.debug("컴포넌트들을 찾았습니다. {}", components);
+
+        container = getInstances(components);
+        requestMap = getRequestMap(components);
+        logger.debug("맵핑할 API EndPoint들을 등록합니다. {}", requestMap);
+    }
+
+    public Map<Class<?>, Object> getContainer() {
+        return container;
+    }
+
+    public Map<HandlerPath, ExecutableHandler> getRequestMapping() {
+        Map<HandlerPath, ExecutableHandler> requestMapping = new HashMap<>();
+        for (HandlerPath handlerPath : requestMap.keySet()) {
+            Method method = requestMap.get(handlerPath);
+            Object object = container.get(method.getDeclaringClass());
+
+            requestMapping.put(handlerPath, new ExecutableHandler(method, object));
+        }
+
+        return requestMapping;
+    }
+
+    // TODO: 아래 Private으로 전환 ---------------------------------------------------------------------------------------
+
+    public List<Class<?>> getComponents(List<Class<?>> classes) {
         return classes.stream()
                 .filter(clazz -> clazz.isAnnotationPresent(Controller.class)
                         || clazz.isAnnotationPresent(Repository.class)
@@ -28,7 +65,7 @@ public class AnnotationScanner {
      * @param components
      * @return
      */
-    public static Map<Class<?>, Object> getInstances(List<Class<?>> components) {
+    public Map<Class<?>, Object> getInstances(List<Class<?>> components) {
         Map<Class<?>, Object> instances = new HashMap<>();
         Map<Class<?>, Class<?>> interfaceToImpl = new HashMap<>();
         Map<Class<?>, List<Class<?>>> dependencies = new HashMap<>();
@@ -106,7 +143,7 @@ public class AnnotationScanner {
         return instances;
     }
 
-    public static Map<HandlerPath, Method> getRequestMap(List<Class<?>> components) {
+    public Map<HandlerPath, Method> getRequestMap(List<Class<?>> components) {
         Map<HandlerPath, Method> requestMap = new HashMap<>();
 
         components.stream()

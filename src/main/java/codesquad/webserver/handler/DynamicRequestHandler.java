@@ -1,22 +1,18 @@
 package codesquad.webserver.handler;
 
-import codesquad.webserver.file.ErrorPageResponseFactory;
 import codesquad.webserver.http.HttpRequest;
 import codesquad.webserver.http.HttpResponse;
-import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
+
 import java.util.Map;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 public class DynamicRequestHandler implements RouterHandler {
     private static final Logger logger = LoggerFactory.getLogger(DynamicRequestHandler.class);
-    private final Map<HandlerPath, Method> requestMap;
-    private final Map<Class<?>, Object> instances;
+    private final Map<HandlerPath, ExecutableHandler> requestMap;
 
-    public DynamicRequestHandler(final Map<HandlerPath, Method> requestMap, final Map<Class<?>, Object> map) {
+    public DynamicRequestHandler(Map<HandlerPath, ExecutableHandler> requestMap) {
         this.requestMap = requestMap;
-        this.instances = map;
     }
 
     @Override
@@ -30,16 +26,10 @@ public class DynamicRequestHandler implements RouterHandler {
         logger.debug("요청을 핸들링합니다. {} {}", httpRequest.method(), httpRequest.path());
         HandlerPath handlerPath = new HandlerPath(httpRequest.method(), httpRequest.path());
 
-        Method handler = requestMap.get(handlerPath);
+        ExecutableHandler handler = requestMap.get(handlerPath);
         if (handler != null) {
-            logger.debug("{}의 {}을 실행합니다.", handler.getDeclaringClass().getName(), handler.getName());
-            try {
-                return (HttpResponse) handler.invoke(instances.get(handler.getDeclaringClass()), httpRequest);
-            } catch (IllegalAccessException | InvocationTargetException e) {
-                logger.debug("핸들링 에러");
-                e.getCause().printStackTrace();
-                return ErrorPageResponseFactory.internalServerError("Message: " + e.getCause().getMessage() + " (" + e.getCause().toString() + ")");
-            }
+            logger.debug("{}의 {}을 실행합니다.", handler.method().getDeclaringClass().getName(), handler.method().getName());
+            return handler.invoke(httpRequest);
         }
 
         return HttpResponse.internalServerError("서버에서 에러가 발생했습니다.");

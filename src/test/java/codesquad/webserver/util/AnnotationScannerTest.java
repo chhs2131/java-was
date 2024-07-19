@@ -14,6 +14,8 @@ import codesquad.webserver.util.fake.FakeImplPrimary;
 import codesquad.webserver.util.fake.FakeRepository;
 import java.lang.reflect.Method;
 import java.util.Set;
+
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import java.util.Arrays;
@@ -21,6 +23,13 @@ import java.util.List;
 import java.util.Map;
 
 class AnnotationScannerTest {
+    private AnnotationScanner annotationScanner;
+
+    @BeforeEach
+    public void setUp() {
+        annotationScanner = new AnnotationScanner();
+    }
+
     @Test
     @DisplayName("어노테이션을 기준으로 컴포넌트를 성공적으로 판별합니다.")
     void testGetComponents() {
@@ -31,7 +40,7 @@ class AnnotationScannerTest {
             FakeClass.class
         );
 
-        List<Class<?>> components = AnnotationScanner.getComponents(classes);
+        List<Class<?>> components = annotationScanner.getComponents(classes);
         assertEquals(3, components.size());
         assertTrue(components.contains(FakeController.class));
         assertTrue(components.contains(FakeRepository.class));
@@ -48,7 +57,7 @@ class AnnotationScannerTest {
             FakeComponent.class
         );
 
-        Map<Class<?>, Object> instances = AnnotationScanner.getInstances(components);
+        Map<Class<?>, Object> instances = annotationScanner.getInstances(components);
         assertEquals(3, instances.size());
         final Set<Class<?>> classes = instances.keySet();
         assertTrue(classes.contains(FakeController.class));
@@ -64,7 +73,7 @@ class AnnotationScannerTest {
             FakeImpl2.class
         );
 
-        assertThrows(IllegalStateException.class, () -> AnnotationScanner.getInstances(components));
+        assertThrows(IllegalStateException.class, () -> annotationScanner.getInstances(components));
     }
 
     @Test
@@ -76,7 +85,7 @@ class AnnotationScannerTest {
             FakeImplPrimary.class
         );
 
-        final Map<Class<?>, Object> instances = AnnotationScanner.getInstances(components);
+        final Map<Class<?>, Object> instances = annotationScanner.getInstances(components);
         final Set<Class<?>> classes = instances.keySet();
         assertTrue(classes.contains(FakeImplPrimary.class));
         assertTrue(classes.contains(FakeImpl1.class));
@@ -93,7 +102,7 @@ class AnnotationScannerTest {
             FakeConstructor.class
         );
 
-        final Map<Class<?>, Object> instances = AnnotationScanner.getInstances(components);
+        final Map<Class<?>, Object> instances = annotationScanner.getInstances(components);
         FakeConstructor o = (FakeConstructor) instances.get(FakeConstructor.class);
 
         assertEquals(100, o.getNumber());
@@ -106,7 +115,7 @@ class AnnotationScannerTest {
             FakeController.class
         );
 
-        Map<HandlerPath, Method> requestMap = AnnotationScanner.getRequestMap(components);
+        Map<HandlerPath, Method> requestMap = annotationScanner.getRequestMap(components);
         assertEquals(1, requestMap.size());
         assertTrue(requestMap.containsKey(new HandlerPath(HttpMethod.GET, "/fake")));
     }
@@ -118,7 +127,7 @@ class AnnotationScannerTest {
             FakeController.class
         );
 
-        Map<HandlerPath, Method> requestMap = AnnotationScanner.getRequestMap(components);
+        Map<HandlerPath, Method> requestMap = annotationScanner.getRequestMap(components);
         assertEquals(1, requestMap.size());
         assertFalse(requestMap.containsKey(new HandlerPath(HttpMethod.GET, "/nothave")));
     }
