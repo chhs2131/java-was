@@ -12,6 +12,7 @@ public enum ContentType {
     ICO("ico", "image/x-icon"),
     JSON("json", "application/json"),
     XML("xml", "application/xml"),
+    WEBP("webp", "image/webp"),
     TXT("txt", "text/plain");
 
     private final String name;
